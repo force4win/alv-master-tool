@@ -34,15 +34,11 @@ public class LoginController {
 
             Sesion.get().setUsuarioLogueado(usuarioDto);
 
-            // INTENCIONAL: Como aún no existe 'primary.fxml' en el destino,
-            // esto fallará si intenta navegar.
-            // Mantenemos la lógica pero debes crear 'primary' después.
-            // O podemos mostrar un mensaje de éxito temporal.
-            System.out.println("Login Exitoso. Navegando a primary...");
+            // Navegación exitosa a la vista principal
             try {
                 App.setRoot("primary");
             } catch (IOException e) {
-                errorLabel.setText("Login OK, pero vista 'primary' no existe aún.");
+                errorLabel.setText("Error al cargar la vista principal.");
                 e.printStackTrace();
             }
 
