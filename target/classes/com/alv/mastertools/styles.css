@@ -1,0 +1,100 @@
+/* Color de fondo para toda la ventana */
+.root {
+    -fx-background-color: #2b2b2b; /* Un gris oscuro tipo 'Dark Mode' */
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* Estilo para todas las etiquetas (Labels) */
+.label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* Estilo específico para el botón */
+.button {
+    -fx-background-color: #0078d7; /* Azul VS Code */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20; /* Arriba Der Abajo Izq */
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+/* Efecto Hover (cuando el mouse pasa por encima) */
+.button:hover {
+    -fx-background-color: #005a9e;
+    -fx-scale-x: 1.05; /* Efecto sutil de zoom */
+    -fx-scale-y: 1.05;
+}
+
+/* Estilo para el campo de texto */
+.text-field {
+    -fx-background-radius: 5;
+    -fx-border-color: #0078d7;
+    -fx-border-radius: 5;
+    -fx-background-color: #3c3c3c;
+    -fx-text-fill: white;
+}
+
+/* Estilo para la TableView */
+.table-view {
+    -fx-background-color: #3c3c3c; /* Un gris oscuro para el fondo de la tabla */
+    -fx-base: #3c3c3c; /* Color de fondo base para filas */
+    -fx-control-inner-background: #3c3c3c;
+    -fx-control-inner-background-alt: #4a4a4a; /* Color alternativo para filas */
+}
+
+/* Estilo para las cabeceras de las columnas de la tabla */
+.table-view .column-header-background {
+    -fx-background-color: #0078d7; /* Azul VS Code para las cabeceras */
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white; /* Texto blanco en las cabeceras */
+    -fx-font-weight: bold;
+}
+
+/* Estilo para las celdas de la tabla */
+.table-view .table-cell {
+    -fx-text-fill: #cccccc; /* Gris claro para el texto de las celdas */
+    -fx-background-color: transparent; /* Fondo transparente para que use el color de la fila */
+}
+
+/* Estilo para las filas seleccionadas */
+.table-view .table-row-cell:selected {
+    -fx-background-color: #005a9e; /* Azul oscuro para fila seleccionada */
+}
+
+/* Estilo para el texto en las filas seleccionadas */
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+/* Estilos para el ContextMenu */
+.context-menu {
+    -fx-background-color: #3c3c3c; /* Fondo oscuro para el menú contextual */
+    -fx-border-color: #0078d7; /* Borde azul para que coincida con otros elementos */
+    -fx-border-width: 1;
+    -fx-background-radius: 5; /* Bordes redondeados */
+    -fx-border-radius: 5; /* Bordes redondeados */
+}
+
+/* Estilo para los elementos del menú (MenuItem) */
+.menu-item {
+    -fx-background-color: transparent; /* Fondo transparente para que use el color del ContextMenu */
+}
+
+/* Estilo para el texto de los MenuItem */
+.menu-item .label {
+    -fx-text-fill: #cccccc; /* Gris claro para el texto de los elementos del menú */
+}
+
+/* Estilo para los MenuItem al pasar el ratón */
+.menu-item:focused {
+    -fx-background-color: #005a9e; /* Azul oscuro para el fondo del elemento enfocado */
+}
+
+/* Estilo para el texto de los MenuItem al pasar el ratón */
+.menu-item:focused .label {
+    -fx-text-fill: white; /* Texto blanco para el elemento enfocado */
+}
