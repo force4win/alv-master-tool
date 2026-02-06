@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.StackPane?>
@@ -20,7 +21,7 @@
         <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 20; -fx-background-color: -color-bg-sidebar; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 0, 5, 5, 0);">
             <Label text="ALV MASTER" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: -color-accent;"/>
             <Region HBox.hgrow="ALWAYS" />
-            <Button text="☀/☾" onAction="#handleToggleTheme" styleClass="theme-button" />
+            <javafx.scene.control.ComboBox fx:id="themeSelector" prefWidth="120" styleClass="theme-selector" />
         </HBox>
     </top>
 

@@ -332,7 +332,7 @@
 
 .root.matrix-theme .text-field:focused {
     -fx-background-color: #001100;
-    -fx-effect: glow(0.8);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 255, 65, 0.8), 10, 0, 0, 0);
 }
 
 /* Tarjetas Minimalistas */
