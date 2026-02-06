@@ -15,13 +15,11 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
 
 ## 2. Estado Actual (Resumen de Contexto)
 - **Últimos cambios importantes**:
-  - Implementación de una capa de persistencia (Patrón Factory).
-  - Corrección de errores en `TrackerService` (métodos duplicados, resolución de `App` class).
-  - Trabajo en la carga de vistas FXML (`reminder_popup.fxml`).
-- **Tareas en curso/pendientes**:
-  - Consolidar la funcionalidad del `TrackerService`.
-  - Asegurar la correcta integración de la capa de persistencia.
-  - Verificación del flujo de la interfaz gráfica (Popups, recordatorios).
+  - Implementación completa de Gestión de Usuarios y Credenciales.
+  - Sistema de Exportación y Limpieza de datos (CSV).
+  - Generación de Instalador/Ejecutable portable (.exe) con `jpackage`.
+  - Mejoras de usabilidad (Scrolls, Filtros de Fecha).
+- **Estado**: Funcional y empaquetable. Versión 0.0.1 lista.
 
 ## 3. Registro de Sesiones
 *Aquí se agregarán los resúmenes de cada sesión al ejecutar el comando "GUARDAR SESSION".*
@@ -46,3 +44,21 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
   - `TrackerService`/`FileDataProvider`: Se corrigió la lectura/escritura de propiedades booleanas (`isActive`, `autoStartOnLogin`).
   - `styles.css`: Corrección de `border-radius` vs `background-radius` en botones transparentes.
   - `tracker_config.fxml`: Corrección de imports faltantes (`Region`) y lógica de estilos condicionales en el controlador.
+
+### Sesión: Gestión de Usuarios, Datos y Despliegue
+- **Gestión de Credenciales**:
+  - Implementado almacenamiento seguro de credenciales en `settings.properties` dentro de `.alv-master`.
+  - Nueva vista `user_config.fxml` y controlador para cambiar usuario/contraseña.
+  - Actualización del Login para validar contra credenciales persistentes.
+- **Gestión de Datos**:
+  - Implementada funcionalidad de **Exportar a CSV** mediante `FileChooser`.
+  - Implementada funcionalidad de **Borrar Historial** con confirmación.
+  - Visualización de la ruta de almacenamiento en la configuración.
+- **Despliegue (Installer)**:
+  - Configuración de `maven-javafx-plugin` para soporte de `jlink`.
+  - Creación del script `generate_exe.bat` para automatizar la creación de la imagen y el ejecutable.
+  - Generación de aplicación portable (`app-image`) compatible con Windows sin requerir Java instalado.
+- **Mejoras UI/UX**:
+  - **Filtros de Fecha**: Agregados `DatePicker` (Desde/Hasta) en la vista de seguimiento para filtrar el historial.
+  - **Responsividad**: Se envolvieron las vistas `user_config` y `tracker_config` en `ScrollPane` para asegurar visibilidad en pantallas pequeñas.
+  - Restauración de etiquetas de estado y corrección de imports en FXML.

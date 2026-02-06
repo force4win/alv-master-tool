@@ -11,82 +11,82 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="25.0" 
-      xmlns="http://javafx.com/javafx/8.0.171" 
-      xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.alv.mastertools.controllers.TrackerConfigController"
-      stylesheets="@../styles.css"
-      style="-fx-padding: 30;">
-
-    <children>
-        <Label text="Configuración de Seguimiento" styleClass="header-label" />
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alv.mastertools.controllers.TrackerConfigController">
+    <content>
+        <VBox spacing="25.0" stylesheets="@../styles.css" style="-fx-padding: 30;">
         
-        <!-- Formulario Config -->
-        <VBox spacing="20" styleClass="card">
-            
-            <!-- Inputs -->
-            <HBox spacing="15" alignment="CENTER_LEFT">
-                <VBox spacing="5" HBox.hgrow="ALWAYS">
-                    <Label text="Hora Inicio" styleClass="label"/>
-                    <TextField fx:id="startTimeField" promptText="09:00" maxWidth="Infinity" />
-                </VBox>
-                <VBox spacing="5" HBox.hgrow="ALWAYS">
-                    <Label text="Hora Fin" styleClass="label"/>
-                    <TextField fx:id="endTimeField" promptText="18:00" maxWidth="Infinity" />
-                </VBox>
-                <VBox spacing="5" HBox.hgrow="ALWAYS">
-                    <Label text="Intervalo (Min)" styleClass="label"/>
-                    <TextField fx:id="intervalField" promptText="15" maxWidth="Infinity" />
-                </VBox>
-            </HBox>
-
-            <!-- Checkbox -->
-            <CheckBox fx:id="autoStartCheckbox" text="Iniciar automáticamente al entrar" />
-            
-            <Separator />
-
-            <!-- Actions Row -->
-            <HBox spacing="15" alignment="CENTER_LEFT">
-                <!-- Botón secundario a la izquierda -->
-                <Button text="Guardar Cambios" onAction="#handleSaveConfig" styleClass="button-secondary" />
+            <children>
+                <Label text="Configuración de Seguimiento" styleClass="header-label" />
                 
-                <!-- Espaciador para empujar el botón principal a la derecha (opcional) o mantener juntos -->
-                <!-- <Region HBox.hgrow="ALWAYS" /> -->
+                <!-- Formulario Config -->
+                <VBox spacing="20" styleClass="card">
+                    
+                    <!-- Inputs -->
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Hora Inicio" styleClass="label"/>
+                            <TextField fx:id="startTimeField" promptText="09:00" maxWidth="Infinity" />
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Hora Fin" styleClass="label"/>
+                            <TextField fx:id="endTimeField" promptText="18:00" maxWidth="Infinity" />
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Intervalo (Min)" styleClass="label"/>
+                            <TextField fx:id="intervalField" promptText="15" maxWidth="Infinity" />
+                        </VBox>
+                    </HBox>
+        
+                    <!-- Checkbox -->
+                    <CheckBox fx:id="autoStartCheckbox" text="Iniciar automáticamente al entrar" />
+                    
+                    <Separator />
+        
+                    <!-- Actions Row -->
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <!-- Botón secundario a la izquierda -->
+                        <Button text="Guardar Cambios" onAction="#handleSaveConfig" styleClass="button-secondary" />
+                        
+                        <!-- Espaciador para empujar el botón principal a la derecha (opcional) o mantener juntos -->
+                        <!-- <Region HBox.hgrow="ALWAYS" /> -->
+                        
+                        <Button fx:id="toggleButton" text="INICIAR SEGUIMIENTO" onAction="#handleToggle" styleClass="button-success" prefWidth="200" />
+                    </HBox>
+                    
+                    <Label fx:id="statusLabel" text="Listo." style="-fx-text-fill: #a3be8c; -fx-font-style: italic;" />
+                </VBox>
                 
-                <Button fx:id="toggleButton" text="INICIAR SEGUIMIENTO" onAction="#handleToggle" styleClass="button-success" prefWidth="200" />
-            </HBox>
-            
-            <Label fx:id="statusLabel" text="Listo." style="-fx-text-fill: #a3be8c; -fx-font-style: italic;" />
+                <!-- Historial Header with Date Filters -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Historial de Actividad" styleClass="sub-header-label" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Desde:" styleClass="label" style="-fx-font-size: 12px;" />
+                        <DatePicker fx:id="filterStartDate" prefWidth="120" />
+                        <Label text="Hasta:" styleClass="label" style="-fx-font-size: 12px; -fx-padding: 0 0 0 5;" />
+                        <DatePicker fx:id="filterEndDate" prefWidth="120" />
+                    </HBox>
+                    
+                    <Button text="Refrescar" onAction="#refreshTable" styleClass="button-secondary" style="-fx-font-size: 11px; -fx-padding: 4 10;" />
+                </HBox>
+        
+                <TableView fx:id="activitiesTable" VBox.vgrow="ALWAYS" minHeight="400">
+                    <columns>
+                        <TableColumn fx:id="startCol" text="Inicio" prefWidth="100" />
+                        <TableColumn fx:id="endCol" text="Fin" prefWidth="100" />
+                        <TableColumn fx:id="durationCol" text="Duración" prefWidth="120" />
+                        <TableColumn fx:id="descCol" text="Descripción" prefWidth="300" />
+                    </columns>
+                    <placeholder>
+                        <Label text="No se han registrado actividades hoy." />
+                    </placeholder>
+                </TableView>
+        
+            </children>
         </VBox>
-        
-        <!-- Historial Header with Date Filters -->
-        <HBox alignment="CENTER_LEFT" spacing="10">
-            <Label text="Historial de Actividad" styleClass="sub-header-label" />
-            <Region HBox.hgrow="ALWAYS" />
-            
-            <HBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="Desde:" styleClass="label" style="-fx-font-size: 12px;" />
-                <DatePicker fx:id="filterStartDate" prefWidth="120" />
-                <Label text="Hasta:" styleClass="label" style="-fx-font-size: 12px; -fx-padding: 0 0 0 5;" />
-                <DatePicker fx:id="filterEndDate" prefWidth="120" />
-            </HBox>
-            
-            <Button text="Refrescar" onAction="#refreshTable" styleClass="button-secondary" style="-fx-font-size: 11px; -fx-padding: 4 10;" />
-        </HBox>
-
-        <TableView fx:id="activitiesTable" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="startCol" text="Inicio" prefWidth="100" />
-                <TableColumn fx:id="endCol" text="Fin" prefWidth="100" />
-                <TableColumn fx:id="durationCol" text="Duración" prefWidth="120" />
-                <TableColumn fx:id="descCol" text="Descripción" prefWidth="300" />
-            </columns>
-            <placeholder>
-                <Label text="No se han registrado actividades hoy." />
-            </placeholder>
-        </TableView>
-
-    </children>
-</VBox>
+    </content>
+</ScrollPane>

@@ -8,73 +8,72 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="25.0" 
-      xmlns="http://javafx.com/javafx/8.0.171" 
-      xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.alv.mastertools.controllers.UserConfigController"
-      stylesheets="@../styles.css"
-      style="-fx-padding: 30;">
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alv.mastertools.controllers.UserConfigController">
+    <content>
+        <VBox spacing="25.0" stylesheets="@../styles.css" style="-fx-padding: 30;">
+            <children>
+                <Label text="Configuración de Cuenta" styleClass="header-label" />
+                
+                <VBox spacing="20" styleClass="card" maxWidth="500">
+                    <Label text="Cambiar Credenciales" styleClass="sub-header-label" />
+                    
+                    <VBox spacing="5">
+                        <Label text="Usuario Actual" styleClass="label" style="-fx-text-fill: -color-text-muted;" />
+                        <TextField fx:id="currentUserField" editable="false" style="-fx-opacity: 0.7;" />
+                    </VBox>
 
-    <children>
-        <Label text="Configuración de Cuenta" styleClass="header-label" />
-        
-        <VBox spacing="20" styleClass="card" maxWidth="500">
-            <Label text="Cambiar Credenciales" styleClass="sub-header-label" />
-            
-            <VBox spacing="5">
-                <Label text="Usuario Actual" styleClass="label" style="-fx-text-fill: -color-text-muted;" />
-                <TextField fx:id="currentUserField" editable="false" style="-fx-opacity: 0.7;" />
-            </VBox>
+                    <Separator />
 
-            <Separator />
+                    <VBox spacing="5">
+                        <Label text="Nuevo Usuario (Opcional)" styleClass="label" />
+                        <TextField fx:id="newUserField" promptText="Dejar vacío para mantener el mismo" />
+                    </VBox>
 
-            <VBox spacing="5">
-                <Label text="Nuevo Usuario (Opcional)" styleClass="label" />
-                <TextField fx:id="newUserField" promptText="Dejar vacío para mantener el mismo" />
-            </VBox>
+                    <VBox spacing="5">
+                        <Label text="Contraseña Actual (Requerido)" styleClass="label" />
+                        <PasswordField fx:id="currentPassField" />
+                    </VBox>
 
-            <VBox spacing="5">
-                <Label text="Contraseña Actual (Requerido)" styleClass="label" />
-                <PasswordField fx:id="currentPassField" />
-            </VBox>
+                    <VBox spacing="5">
+                        <Label text="Nueva Contraseña" styleClass="label" />
+                        <PasswordField fx:id="newPassField" promptText="Mínimo 4 caracteres" />
+                    </VBox>
 
-            <VBox spacing="5">
-                <Label text="Nueva Contraseña" styleClass="label" />
-                <PasswordField fx:id="newPassField" promptText="Mínimo 4 caracteres" />
-            </VBox>
+                    <VBox spacing="5">
+                        <Label text="Confirmar Nueva Contraseña" styleClass="label" />
+                        <PasswordField fx:id="confirmPassField" />
+                    </VBox>
+                    
+                    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+                        <Label fx:id="statusLabel" text="" style="-fx-text-fill: -color-danger;" />
+                        <Button text="Guardar Cambios" onAction="#handleSave" styleClass="button-success" />
+                    </HBox>
+                </VBox>
+                
+                <!-- Data Management Card -->
+                <VBox spacing="20" styleClass="card" maxWidth="500">
+                    <Label text="Gestión de Datos" styleClass="sub-header-label" />
+                    
+                    <VBox spacing="5">
+                        <Label text="Ruta de Almacenamiento:" styleClass="label" style="-fx-text-fill: -color-text-muted;"/>
+                        <Label fx:id="storagePathLabel" text="..." style="-fx-font-family: 'Consolas', monospace; -fx-wrap-text: true;" />
+                    </VBox>
 
-            <VBox spacing="5">
-                <Label text="Confirmar Nueva Contraseña" styleClass="label" />
-                <PasswordField fx:id="confirmPassField" />
-            </VBox>
-            
-            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
-                <Label fx:id="statusLabel" text="" style="-fx-text-fill: -color-danger;" />
-                <Button text="Guardar Cambios" onAction="#handleSave" styleClass="button-success" />
-            </HBox>
+                    <Separator />
+
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Button text="Exportar Historial (CSV)" onAction="#handleExportData" styleClass="button-secondary" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button text="Borrar Todo el Historial" onAction="#handleClearData" styleClass="button-danger" />
+                    </HBox>
+                    
+                    <Label fx:id="dataStatusLabel" text="" />
+                </VBox>
+                
+            </children>
         </VBox>
-        
-        <!-- Data Management Card -->
-        <VBox spacing="20" styleClass="card" maxWidth="500">
-            <Label text="Gestión de Datos" styleClass="sub-header-label" />
-            
-            <VBox spacing="5">
-                 <Label text="Ruta de Almacenamiento:" styleClass="label" style="-fx-text-fill: -color-text-muted;"/>
-                 <Label fx:id="storagePathLabel" text="..." style="-fx-font-family: 'Consolas', monospace; -fx-wrap-text: true;" />
-            </VBox>
-
-            <Separator />
-
-            <HBox spacing="15" alignment="CENTER_LEFT">
-                <Button text="Exportar Historial (CSV)" onAction="#handleExportData" styleClass="button-secondary" />
-                <Region HBox.hgrow="ALWAYS" />
-                <Button text="Borrar Todo el Historial" onAction="#handleClearData" styleClass="button-danger" />
-            </HBox>
-            
-            <Label fx:id="dataStatusLabel" text="" />
-        </VBox>
-        
-    </children>
-</VBox>
+    </content>
+</ScrollPane>
