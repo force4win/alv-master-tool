@@ -26,7 +26,7 @@ public class PrimaryController {
     public void initialize() {
         // Inicializar ComboBox
         ObservableList<String> options = FXCollections.observableArrayList(
-                "Dark", "Light", "Kids", "Matrix");
+                "Dark", "Light", "Kids", "Matrix", "Synthwave", "Dracula", "Coffee");
         themeSelector.setItems(options);
 
         // Cargar vista inicio
@@ -44,7 +44,7 @@ public class PrimaryController {
     }
 
     private void initTheme() {
-        String savedTheme = TrackerService.get().getSettings().getTheme(); // "dark", "light", "kids", "matrix"
+        String savedTheme = TrackerService.get().getSettings().getTheme(); // "dark", "light", "kids", "matrix", etc.
         // Mapear a mayúsculas para el combo
         String comboValue = "Dark";
         if ("light".equals(savedTheme)) {
@@ -53,6 +53,12 @@ public class PrimaryController {
             comboValue = "Kids";
         } else if ("matrix".equals(savedTheme)) {
             comboValue = "Matrix";
+        } else if ("synthwave".equals(savedTheme)) {
+            comboValue = "Synthwave";
+        } else if ("dracula".equals(savedTheme)) {
+            comboValue = "Dracula";
+        } else if ("coffee".equals(savedTheme)) {
+            comboValue = "Coffee";
         }
 
         themeSelector.setValue(comboValue);
@@ -63,7 +69,9 @@ public class PrimaryController {
             Parent root = contentArea.getScene().getRoot();
 
             // Limpiar temas anteriores
-            root.getStyleClass().removeAll("light-theme", "kids-theme", "matrix-theme");
+            root.getStyleClass().removeAll(
+                    "light-theme", "kids-theme", "matrix-theme",
+                    "synthwave-theme", "dracula-theme", "coffee-theme");
 
             if ("light".equals(newTheme)) {
                 root.getStyleClass().add("light-theme");
@@ -71,6 +79,12 @@ public class PrimaryController {
                 root.getStyleClass().add("kids-theme");
             } else if ("matrix".equals(newTheme)) {
                 root.getStyleClass().add("matrix-theme");
+            } else if ("synthwave".equals(newTheme)) {
+                root.getStyleClass().add("synthwave-theme");
+            } else if ("dracula".equals(newTheme)) {
+                root.getStyleClass().add("dracula-theme");
+            } else if ("coffee".equals(newTheme)) {
+                root.getStyleClass().add("coffee-theme");
             }
             // "dark" es default
 

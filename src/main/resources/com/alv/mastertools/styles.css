@@ -440,3 +440,132 @@
     -fx-background-color: -color-bg-card;
     -fx-text-fill: -color-text-primary;
 }
+
+/* --- TEMA SYNTHWAVE: "Neon Nights" --- */
+.root.synthwave-theme {
+    -color-bg-base: #241235;
+    /* Morado Profundo */
+    -color-bg-card: #2D1B4E;
+    -color-bg-sidebar: #1A0B2E;
+
+    -color-text-primary: #00F3FF;
+    /* Cyan Neon */
+    -color-text-secondary: #FF00FF;
+    /* Magenta Neon */
+    -color-text-muted: #BFA2DB;
+
+    -color-accent: #FF00FF;
+    /* Magenta */
+    -color-accent-dark: #D400D4;
+
+    -color-success: #00FF9D;
+    /* Verde Menta Fluor */
+    -color-success-hover: #00D482;
+
+    -color-danger: #FF2A6D;
+    /* Rosa Rojizo */
+    -color-danger-hover: #D41C54;
+
+    -color-input-bg: #1A0B2E;
+    -color-input-border: #FF00FF;
+
+    -fx-font-family: 'Segoe UI', 'Roboto', sans-serif;
+    -fx-font-size: 14px;
+}
+
+.root.synthwave-theme .button {
+    -fx-background-radius: 4;
+    -fx-border-color: -color-accent;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 255, 0.4), 10, 0, 0, 0);
+}
+
+.root.synthwave-theme .text-field:focused {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.6), 8, 0, 0, 0);
+    -fx-border-color: -color-text-primary;
+}
+
+
+/* --- TEMA DRACULA: "Vampire Code" --- */
+.root.dracula-theme {
+    -color-bg-base: #282a36;
+    /* Background */
+    -color-bg-card: #44475a;
+    /* Current Line/Selection */
+    -color-bg-sidebar: #21222c;
+    /* Mismatched darker bg */
+
+    -color-text-primary: #f8f8f2;
+    /* Foreground */
+    -color-text-secondary: #bd93f9;
+    /* Purple */
+    -color-text-muted: #6272a4;
+    /* Comment */
+
+    -color-accent: #ff79c6;
+    /* Pink */
+    -color-accent-dark: #bd93f9;
+    /* Purple */
+
+    -color-success: #50fa7b;
+    /* Green */
+    -color-success-hover: #40c963;
+
+    -color-danger: #ff5555;
+    /* Red */
+    -color-danger-hover: #ff3333;
+
+    -color-input-bg: #282a36;
+    -color-input-border: #6272a4;
+
+    -fx-font-family: 'Consolas', 'Segoe UI', sans-serif;
+}
+
+.root.dracula-theme .button {
+    -fx-background-radius: 4;
+}
+
+
+/* --- TEMA COFFEE: "Espresso Break" --- */
+.root.coffee-theme {
+    -color-bg-base: #F5E6D3;
+    /* Crema suave */
+    -color-bg-card: #FFF8F0;
+    /* Leche manchada */
+    -color-bg-sidebar: #E8D5B5;
+    /* Latte */
+
+    -color-text-primary: #4E342E;
+    /* Café Expreso */
+    -color-text-secondary: #795548;
+    /* Café Americano */
+    -color-text-muted: #A1887F;
+
+    -color-accent: #D84315;
+    /* Naranja Quemado (Canela) */
+    -color-accent-dark: #BF360C;
+
+    -color-success: #5D4037;
+    /* Usamos tonos tierra para éxito también (estilo minimal) */
+    -color-success-hover: #3E2723;
+
+    -color-danger: #C62828;
+    /* Rojo ladrillo */
+    -color-danger-hover: #B71C1C;
+
+    -color-input-bg: #FFFFFF;
+    -color-input-border: #D7CCC8;
+
+    -fx-font-family: 'Georgia', 'Times New Roman', serif;
+    -fx-font-size: 15px;
+}
+
+.root.coffee-theme .button {
+    -fx-background-radius: 2;
+    -fx-effect: none;
+    -fx-start-margin: 20;
+}
+
+.root.coffee-theme .card {
+    -fx-effect: dropshadow(three-pass-box, rgba(78, 52, 46, 0.1), 3, 0, 1, 1);
+}
