@@ -45,13 +45,15 @@
                     
                     <Separator />
         
-                    <!-- Actions Row -->
+                <!-- Actions Row -->
                     <HBox spacing="15" alignment="CENTER_LEFT">
                         <!-- Botón secundario a la izquierda -->
                         <Button text="Guardar Cambios" onAction="#handleSaveConfig" styleClass="button-secondary" />
                         
-                        <!-- Espaciador para empujar el botón principal a la derecha (opcional) o mantener juntos -->
-                        <!-- <Region HBox.hgrow="ALWAYS" /> -->
+                        <!-- Espaciador -->
+                        <Region HBox.hgrow="ALWAYS" />
+                        
+                        <Button text="Registrar Ahora" onAction="#handleManualEntry" styleClass="button-secondary" style="-fx-font-weight:bold;"/>
                         
                         <Button fx:id="toggleButton" text="INICIAR SEGUIMIENTO" onAction="#handleToggle" styleClass="button-success" prefWidth="200" />
                     </HBox>

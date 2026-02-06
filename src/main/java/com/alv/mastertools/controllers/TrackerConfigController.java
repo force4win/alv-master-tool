@@ -121,6 +121,11 @@ public class TrackerConfigController {
     }
 
     @FXML
+    private void handleManualEntry() {
+        service.openManualEntryPopup();
+    }
+
+    @FXML
     private void handleSaveConfig() {
         if (saveSettingsFromUI()) {
             statusLabel.setText("Configuración guardada.");

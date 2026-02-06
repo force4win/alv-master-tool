@@ -153,7 +153,19 @@ public class TrackerService {
         Platform.runLater(this::showPopup);
     }
 
+    /**
+     * Permite abrir el popup de registro de tarea manualmente,
+     * ignorando las restricciones de horario/estado activo,
+     * pero respetando si ya hay un popup abierto.
+     */
+    public void openManualEntryPopup() {
+        Platform.runLater(this::showPopup);
+    }
+
     private void showPopup() {
+        if (isPopupOpen)
+            return; // Prevent duplicates
+
         try {
             isPopupOpen = true;
             FXMLLoader loader = new FXMLLoader(App.class.getResource("views/reminder_popup.fxml"));
