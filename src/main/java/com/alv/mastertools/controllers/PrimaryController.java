@@ -25,6 +25,11 @@ public class PrimaryController {
         loadView("home");
     }
 
+    @FXML
+    private void showTracker() {
+        loadView("tracker_config");
+    }
+
     private void loadView(String fxml) {
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("views/" + fxml + ".fxml"));
@@ -32,6 +37,18 @@ public class PrimaryController {
             contentArea.getChildren().setAll(view);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleToggleTheme() {
+        if (contentArea.getScene() != null) {
+            Parent root = contentArea.getScene().getRoot();
+            if (root.getStyleClass().contains("light-theme")) {
+                root.getStyleClass().remove("light-theme");
+            } else {
+                root.getStyleClass().add("light-theme");
+            }
         }
     }
 

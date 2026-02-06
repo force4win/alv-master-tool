@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import com.alv.mastertools.services.TrackerService;
+
 public class LoginController {
     @FXML
     private TextField userField;
@@ -33,6 +35,11 @@ public class LoginController {
             Usuario usuarioDto = new Usuario(usuario, "Administrador", password);
 
             Sesion.get().setUsuarioLogueado(usuarioDto);
+
+            // Auto-arranque de tracker si está configurado
+            if (TrackerService.get().getSettings().isAutoStartOnLogin()) {
+                TrackerService.get().startTracking();
+            }
 
             // Navegación exitosa a la vista principal
             try {

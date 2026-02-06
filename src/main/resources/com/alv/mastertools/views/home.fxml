@@ -4,14 +4,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20.0" 
+<VBox alignment="CENTER" spacing="10.0" 
       xmlns="http://javafx.com/javafx/8.0.171" 
       xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.alv.mastertools.controllers.HomeController">
+      fx:controller="com.alv.mastertools.controllers.HomeController"
+      stylesheets="@../styles.css">
 
     <children>
-        <Label text="¡Bienvenido a Master Tools!" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" />
-        <Label text="Selecciona una opción del menú para comenzar." style="-fx-font-size: 16px; -fx-text-fill: #cccccc;" />
+        <Label text="¡Bienvenido a Master Tools!" styleClass="header-label" style="-fx-font-size: 32px;"/>
+        <Label text="Selecciona una opción del menú para comenzar." styleClass="sub-header-label" style="-fx-font-size: 16px; -fx-text-fill: #81A1C1;" />
     </children>
     
     <padding>

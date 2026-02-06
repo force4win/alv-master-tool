@@ -1,104 +1,232 @@
-/* Color de fondo para toda la ventana */
+/* --- THEME DEFINITIONS --- */
 .root {
-    -fx-background-color: #2b2b2b;
-    /* Un gris oscuro tipo 'Dark Mode' */
-    -fx-font-family: 'Segoe UI', sans-serif;
+    /* --- NORDIC NIGHT (Dark / Default) --- */
+    -color-bg-base: #2E3440;
+    -color-bg-card: #3B4252;
+    -color-bg-sidebar: #242933;
+    -color-text-primary: #ECEFF4;
+    -color-text-secondary: #D8DEE9;
+    -color-text-muted: #4C566A;
+
+    -color-accent: #88C0D0;
+    /* Frost Blue */
+    -color-accent-dark: #5E81AC;
+    /* Cobalt */
+
+    -color-success: #A3BE8C;
+    -color-success-hover: #B5D29C;
+    -color-danger: #BF616A;
+    -color-danger-hover: #D08770;
+
+    -color-input-bg: #3B4252;
+    -color-input-border: #4C566A;
+
+    -fx-base: -color-bg-base;
+    -fx-background-color: -color-bg-base;
+    -fx-font-family: 'Segoe UI', 'Roboto', sans-serif;
+    -fx-text-fill: -color-text-primary;
 }
 
-/* Estilo para todas las etiquetas (Labels) */
+.root.light-theme {
+    /* --- NORDIC SNOW (Light) --- */
+    -color-bg-base: #ECEFF4;
+    -color-bg-card: #FFFFFF;
+    -color-bg-sidebar: #E5E9F0;
+    -color-text-primary: #2E3440;
+    -color-text-secondary: #3B4252;
+    -color-text-muted: #9499A6;
+    /* Ajustado para mejor contraste */
+
+    -color-accent: #2E3440;
+    /* Dark for high contrast headers */
+    -color-accent-dark: #5E81AC;
+    /* Cobalt stays */
+
+    -color-success: #A3BE8C;
+    /* Keep greens */
+    -color-success-hover: #8FBCBB;
+    -color-danger: #BF616A;
+    -color-danger-hover: #D08770;
+
+    -color-input-bg: #FFFFFF;
+    -color-input-border: #D8DEE9;
+}
+
+/* --- LABELS --- */
 .label {
-    -fx-text-fill: white;
+    -fx-text-fill: -color-text-primary;
     -fx-font-size: 14px;
 }
 
-/* --- SIDEBAR (ZONA VERDE) --- */
-.sidebar {
-    -fx-background-color: #4CAF50;
-    /* Verde base */
-    -fx-border-color: #388E3C;
-    -fx-border-width: 0 1 0 0;
-    /* Borde derecho para separar */
-}
-
-/* ScrollPane del Sidebar - Fondo Transparente/Verde */
-.sidebar-scroll {
-    -fx-background-color: transparent;
-    -fx-background: transparent;
-    /* Necesario para ScrollPanes */
-}
-
-.sidebar-scroll .viewport {
-    -fx-background-color: transparent;
-}
-
-
-/* --- ZONA DE CONTENIDO (ZONA NARANJA) --- */
-.content-area {
-    -fx-background-color: #FF9800;
-    /* Naranja base */
-}
-
-
-/* --- BOTONES DEL MENÚ --- */
-.menu-button {
-    -fx-background-color: transparent;
-    /* Transparente por defecto */
-    -fx-text-fill: white;
+.header-label {
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-padding: 12 20 12 20;
-    -fx-cursor: hand;
-    -fx-background-radius: 5;
+    -fx-text-fill: -color-accent;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 3, 0, 0, 0);
 }
 
-.menu-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-    /* Efecto hover sutil */
+.sub-header-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-text-secondary;
 }
 
-.menu-button-danger {
-    -fx-background-color: #E53935;
-    -fx-text-fill: white;
-    -fx-cursor: hand;
-    -fx-background-radius: 5;
-}
-
-.menu-button-danger:hover {
-    -fx-background-color: #C62828;
-}
-
-/* --- Estilos Generales y Login (Legacy/Compartido) --- */
-
-/* Estilo para el botón general */
+/* --- BUTTONS --- */
 .button {
-    -fx-background-color: #0078d7;
-    /* Azul VS Code */
+    -fx-background-color: -color-accent-dark;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 10 20 10 20;
-    -fx-background-radius: 5;
+    -fx-background-radius: 4;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 3, 0, 0, 1);
+    -fx-transition: all 0.2s;
+}
+
+.button:hover {
+    -fx-background-color: derive(-color-accent-dark, 20%);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.button-secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: -color-accent-dark;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-text-fill: -color-accent-dark;
+}
+
+.button-secondary:hover {
+    -fx-background-color: rgba(94, 129, 172, 0.1);
+    -fx-border-color: derive(-color-accent-dark, 20%);
+    -fx-text-fill: -color-text-primary;
+}
+
+.button-success {
+    -fx-background-color: -color-success;
+    -fx-text-fill: #2E3440;
+}
+
+.button-success:hover {
+    -fx-background-color: -color-success-hover;
+}
+
+.button-danger {
+    -fx-background-color: -color-danger;
+    -fx-text-fill: white;
+}
+
+.button-danger:hover {
+    -fx-background-color: -color-danger-hover;
+}
+
+/* --- TEXT FIELDS --- */
+.text-field,
+.password-field {
+    -fx-background-color: -color-input-bg;
+    -fx-text-fill: -color-text-primary;
+    -fx-prompt-text-fill: -color-text-muted;
+    -fx-background-radius: 4;
+    -fx-border-color: -color-input-border;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: -color-accent;
+    -fx-background-color: derive(-color-input-bg, -5%);
+}
+
+/* --- CHECKBOX --- */
+.check-box .box {
+    -fx-background-color: -color-input-bg;
+    -fx-border-color: -color-input-border;
+    -fx-border-radius: 3;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: -color-accent;
+}
+
+.check-box .text {
+    -fx-fill: -color-text-primary;
+}
+
+/* --- TABLE VIEW --- */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-base: -color-bg-base;
+    /* Vital for headers in light mode */
+    -fx-control-inner-background: -color-bg-base;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: -color-bg-card;
+    -fx-background-radius: 4 4 0 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: -color-text-secondary;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: -color-bg-base;
+    -fx-text-fill: -color-text-primary;
+    -fx-border-color: transparent transparent -color-bg-card transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: derive(-color-bg-base, 5%);
+}
+
+.table-row-cell:selected {
+    -fx-background-color: derive(-color-bg-base, 15%);
+}
+
+/* --- LAYOUTS --- */
+.card {
+    -fx-background-color: -color-bg-card;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+    -fx-padding: 20;
+}
+
+.sidebar {
+    -fx-background-color: -color-bg-sidebar;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 5, 0);
+}
+
+.sidebar .button {
+    -fx-background-color: transparent;
+    -fx-alignment: BASELINE_LEFT;
+    -fx-font-size: 15px;
+    -fx-text-fill: -color-text-secondary;
+    -fx-effect: none;
+}
+
+.sidebar .button:hover {
+    -fx-background-color: derive(-color-bg-sidebar, -10%);
+    -fx-text-fill: -color-accent;
+    -fx-padding: 8 16 8 20;
+}
+
+.theme-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-text-secondary;
+    -fx-border-color: -color-text-muted;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    /* Fix for square hover */
+    -fx-effect: none;
     -fx-cursor: hand;
 }
 
-/* Efecto Hover para botón general */
-.button:hover {
-    -fx-background-color: #005a9e;
-    -fx-scale-x: 1.05;
-}
-
-/* Estilo para el campo de texto */
-.text-field {
-    -fx-background-radius: 5;
-    -fx-border-color: #0078d7;
-    -fx-border-radius: 5;
-    -fx-background-color: #3c3c3c;
-    -fx-text-fill: white;
-}
-
-.password-field {
-    -fx-background-radius: 5;
-    -fx-border-color: #0078d7;
-    -fx-border-radius: 5;
-    -fx-background-color: #3c3c3c;
-    -fx-text-fill: white;
+.theme-button:hover {
+    -fx-background-color: -color-bg-card;
+    -fx-text-fill: -color-text-primary;
 }

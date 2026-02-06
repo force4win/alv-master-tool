@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "com.alv.mastertools/com.alv.mastertools.App",
+            "projectName": "alv-master-tool"
+        },
+        {
+            "type": "java",
+            "name": "Launch App (Fast Update)",
+            "request": "launch",
+            "mainClass": "com.alv.mastertools/com.alv.mastertools.App",
+            "projectName": "alv-master-tool",
+            "preLaunchTask": "maven-compile"
+        },
+        {
+            "type": "java",
+            "name": "Launch App (Full Clean Build)",
+            "request": "launch",
+            "mainClass": "com.alv.mastertools/com.alv.mastertools.App",
+            "projectName": "alv-master-tool",
+            "preLaunchTask": "maven-clean-compile"
+        }
+    ]
+}

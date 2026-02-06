@@ -7,27 +7,34 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20.0" 
+<VBox alignment="CENTER" spacing="0" 
       xmlns="http://javafx.com/javafx/8.0.171" 
       xmlns:fx="http://javafx.com/fxml/1" 
       fx:controller="com.alv.mastertools.controllers.LoginController"
       stylesheets="@../styles.css">
 
    <children>
-      <Label text="INICIAR SESIÓN" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
-      
-      <Label text="Usuario:" />
-      <TextField fx:id="userField" maxWidth="200" promptText="admin" />
-      
-      <Label text="Contraseña:" />
-      <PasswordField fx:id="passField" maxWidth="200" promptText="1234" />
-      
-      <Button text="Ingresar" onAction="#handleLogin" defaultButton="true" />
-      
-      <Label fx:id="errorLabel" text="" style="-fx-text-fill: #ff6b6b;" />
+      <VBox alignment="CENTER" spacing="20" maxWidth="350" styleClass="card">
+         <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+         </padding>
+         
+         <Label text="ALV Master Tool" styleClass="header-label" style="-fx-font-size: 28px;"/>
+         <Label text="Inicio de Sesión" styleClass="sub-header-label" style="-fx-text-fill: #81A1C1;"/>
+         
+         <VBox spacing="5" alignment="CENTER_LEFT">
+             <Label text="Usuario" styleClass="label"/>
+             <TextField fx:id="userField" promptText="admin" maxWidth="Infinity" />
+         </VBox>
+         
+         <VBox spacing="5" alignment="CENTER_LEFT">
+             <Label text="Contraseña" styleClass="label"/>
+             <PasswordField fx:id="passField" promptText="1234" maxWidth="Infinity" />
+         </VBox>
+         
+         <Button text="INGRESAR" onAction="#handleLogin" defaultButton="true" maxWidth="Infinity" style="-fx-padding: 12;" />
+         
+         <Label fx:id="errorLabel" text="" style="-fx-text-fill: #BF616A;" wrapText="true" textAlignment="CENTER"/>
+      </VBox>
    </children>
-   
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
 </VBox>

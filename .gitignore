@@ -46,4 +46,11 @@ replay_pid*
 .history
 .ionide
 
+# B
+# C
 # End of https://www.toptal.com/developers/gitignore/api/java,visualstudiocode
+#
+#
+target
+target
+target
