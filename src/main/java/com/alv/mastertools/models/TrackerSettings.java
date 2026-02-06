@@ -7,6 +7,8 @@ public class TrackerSettings {
     private LocalTime endTime;
     private int intervalMinutes;
     private boolean active;
+    private boolean autoStartOnLogin = false;
+    private String theme = "dark";
 
     public TrackerSettings(LocalTime startTime, LocalTime endTime, int intervalMinutes) {
         this.startTime = startTime;
@@ -55,13 +57,39 @@ public class TrackerSettings {
         this.active = active;
     }
 
-    private boolean autoStartOnLogin;
-
     public boolean isAutoStartOnLogin() {
         return autoStartOnLogin;
     }
 
     public void setAutoStartOnLogin(boolean autoStartOnLogin) {
         this.autoStartOnLogin = autoStartOnLogin;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    // Credenciales
+    private String username = "admin";
+    private String password = "123";
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

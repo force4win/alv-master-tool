@@ -46,7 +46,11 @@ public class FileDataProvider implements IDataProvider {
         props.setProperty("endTime", settings.getEndTime().toString());
         props.setProperty("intervalMinutes", String.valueOf(settings.getIntervalMinutes()));
         props.setProperty("isActive", String.valueOf(settings.isActive()));
+        props.setProperty("isActive", String.valueOf(settings.isActive()));
         props.setProperty("autoStartOnLogin", String.valueOf(settings.isAutoStartOnLogin()));
+        props.setProperty("theme", settings.getTheme());
+        props.setProperty("username", settings.getUsername());
+        props.setProperty("password", settings.getPassword());
 
         try (OutputStream output = Files.newOutputStream(storageDir.resolve(SETTINGS_FILE))) {
             props.store(output, "AlvMasterTool Tracker Settings");
@@ -70,7 +74,11 @@ public class FileDataProvider implements IDataProvider {
                 settings.setEndTime(LocalTime.parse(props.getProperty("endTime", "18:00")));
                 settings.setIntervalMinutes(Integer.parseInt(props.getProperty("intervalMinutes", "30")));
                 settings.setActive(Boolean.parseBoolean(props.getProperty("isActive", "false")));
+                settings.setActive(Boolean.parseBoolean(props.getProperty("isActive", "false")));
                 settings.setAutoStartOnLogin(Boolean.parseBoolean(props.getProperty("autoStartOnLogin", "false")));
+                settings.setTheme(props.getProperty("theme", "dark"));
+                settings.setUsername(props.getProperty("username", "admin"));
+                settings.setPassword(props.getProperty("password", "123"));
 
             } catch (Exception e) {
                 e.printStackTrace();

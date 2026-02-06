@@ -25,14 +25,18 @@ public class LoginController {
 
     @FXML
     private void handleLogin() throws IOException {
-        String usuario = userField.getText();
-        String password = passField.getText();
+        String inputUser = userField.getText();
+        String inputPass = passField.getText();
 
-        // VALIDACIÓN SIMPLE (Hardcodeada)
-        if ("admin".equals(usuario) && "1234".equals(password)) {
+        // Obtener credenciales guardadas
+        String storedUser = TrackerService.get().getSettings().getUsername();
+        String storedPass = TrackerService.get().getSettings().getPassword();
+
+        // VALIDACIÓN DINÁMICA
+        if (storedUser.equals(inputUser) && storedPass.equals(inputPass)) {
 
             // Pasamos 'password' (lo que escribió el usuario) al constructor
-            Usuario usuarioDto = new Usuario(usuario, "Administrador", password);
+            Usuario usuarioDto = new Usuario(inputUser, "Administrador", inputPass);
 
             Sesion.get().setUsuarioLogueado(usuarioDto);
 

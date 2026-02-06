@@ -36,7 +36,7 @@
                         <Button text="SEGUIMIENTO" onAction="#showTracker" maxWidth="Infinity" />
                         
                         <Label text="SISTEMA" style="-fx-text-fill: -color-text-muted; -fx-font-size: 11px; -fx-padding: 15 0 5 10; -fx-font-weight: bold;"/>
-                        <Button text="Configuración" disable="true" maxWidth="Infinity" />
+                        <Button text="Configuración" onAction="#showConfig" maxWidth="Infinity" />
                     </children>
                 </VBox>
                 
