@@ -259,11 +259,112 @@
     -fx-background-color: -color-accent;
 }
 
-.check-box .text {
-    -fx-fill: -color-text-primary;
+/* --- TEMA MATRIX: "The Code" --- */
+.root.matrix-theme {
+    /* Paleta Hacker Console */
+    -color-bg-base: #0D0D0D;
+    /* Almost Black */
+    -color-bg-card: #000000;
+    /* Pure Black */
+    -color-bg-sidebar: #111111;
+
+    -color-text-primary: #00FF41;
+    /* Iconic Matrix Bright Green */
+    -color-text-secondary: #008F11;
+    /* Darker Green */
+    -color-text-muted: #003B00;
+    /* Very Dark Green */
+
+    -color-accent: #00FF41;
+    -color-accent-dark: #008F11;
+
+    -color-success: #00FF41;
+    -color-success-hover: #FFFFFF;
+    /* Flash white on success hover */
+
+    -color-danger: #FF0000;
+    /* System Error Red */
+    -color-danger-hover: #8B0000;
+
+    -color-input-bg: #000000;
+    -color-input-border: #008F11;
+
+    /* Terminal Font */
+    -fx-font-family: 'Consolas', 'Courier New', 'Monospaced';
+    -fx-font-size: 14px;
 }
 
-/* --- TABLE VIEW --- */
+/* --- OVERRIDES ESPECIFICOS PARA MATRIX THEME --- */
+
+/* Botones estilo Terminal */
+.root.matrix-theme .button {
+    -fx-background-color: black;
+    -fx-border-color: -color-accent;
+    -fx-border-width: 1;
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: -color-accent;
+    -fx-font-family: 'Consolas', 'Monospaced';
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 255, 65, 0.4), 10, 0, 0, 0);
+    /* Green Glow */
+}
+
+.root.matrix-theme .button:hover {
+    -fx-background-color: -color-accent;
+    -fx-text-fill: black;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 255, 65, 0.8), 15, 0, 0, 0);
+}
+
+.root.matrix-theme .button-secondary {
+    -fx-border-style: dotted;
+}
+
+/* Inputs Terminal */
+.root.matrix-theme .text-field,
+.root.matrix-theme .password-field,
+.root.matrix-theme .date-picker .text-field {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-prompt-text-fill: -color-text-muted;
+}
+
+.root.matrix-theme .text-field:focused {
+    -fx-background-color: #001100;
+    -fx-effect: glow(0.8);
+}
+
+/* Tarjetas Minimalistas */
+.root.matrix-theme .card {
+    -fx-background-radius: 0;
+    -fx-border-color: -color-text-muted;
+    -fx-border-width: 1;
+    -fx-effect: none;
+}
+
+/* Tabla Datos Puros */
+.root.matrix-theme .table-view .column-header-background {
+    -fx-background-color: black;
+    -fx-border-color: -color-accent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.root.matrix-theme .table-view .column-header .label {
+    -fx-font-weight: normal;
+}
+
+.root.matrix-theme .table-row-cell {
+    -fx-background-color: black;
+    -fx-border-color: #003B00;
+    -fx-border-width: 0 0 1 0;
+}
+
+.root.matrix-theme .table-row-cell:selected {
+    -fx-background-color: #003B00;
+    -fx-text-fill: white;
+}
+
 .table-view {
     -fx-background-color: transparent;
     -fx-base: -color-bg-base;

@@ -34,12 +34,14 @@ public class PrimaryController {
             Parent root = contentArea.getScene().getRoot();
 
             // Limpiar temas anteriores
-            root.getStyleClass().removeAll("light-theme", "kids-theme");
+            root.getStyleClass().removeAll("light-theme", "kids-theme", "matrix-theme");
 
             if ("light".equals(theme)) {
                 root.getStyleClass().add("light-theme");
             } else if ("kids".equals(theme)) {
                 root.getStyleClass().add("kids-theme");
+            } else if ("matrix".equals(theme)) {
+                root.getStyleClass().add("matrix-theme");
             }
             // "dark" es el default, así que no agregamos clase extra
         }
@@ -75,23 +77,26 @@ public class PrimaryController {
         if (contentArea.getScene() != null) {
             Parent root = contentArea.getScene().getRoot();
             TrackerSettings settings = TrackerService.get().getSettings();
-            String currentTheme = settings.getTheme(); // "dark", "light", "kids"
+            String currentTheme = settings.getTheme(); // "dark", "light", "kids", "matrix"
 
             // Limpiar clases
-            root.getStyleClass().removeAll("light-theme", "kids-theme");
+            root.getStyleClass().removeAll("light-theme", "kids-theme", "matrix-theme");
 
             String newTheme = "dark";
 
-            // Ciclo: dark -> light -> kids -> dark
+            // Ciclo: dark -> light -> kids -> matrix -> dark
             if (currentTheme == null || "dark".equals(currentTheme)) {
                 newTheme = "light";
                 root.getStyleClass().add("light-theme");
             } else if ("light".equals(currentTheme)) {
                 newTheme = "kids";
                 root.getStyleClass().add("kids-theme");
+            } else if ("kids".equals(currentTheme)) {
+                newTheme = "matrix";
+                root.getStyleClass().add("matrix-theme");
             } else {
                 newTheme = "dark";
-                // No class needed for dark
+                // Default
             }
 
             settings.setTheme(newTheme);
