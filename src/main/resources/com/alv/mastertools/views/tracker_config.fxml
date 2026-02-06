@@ -10,6 +10,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.geometry.Insets?>
 
 <VBox spacing="25.0" 
@@ -60,10 +61,18 @@
             <Label fx:id="statusLabel" text="Listo." style="-fx-text-fill: #a3be8c; -fx-font-style: italic;" />
         </VBox>
         
-        <!-- Historial Header with Spacer -->
+        <!-- Historial Header with Date Filters -->
         <HBox alignment="CENTER_LEFT" spacing="10">
             <Label text="Historial de Actividad" styleClass="sub-header-label" />
             <Region HBox.hgrow="ALWAYS" />
+            
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Desde:" styleClass="label" style="-fx-font-size: 12px;" />
+                <DatePicker fx:id="filterStartDate" prefWidth="120" />
+                <Label text="Hasta:" styleClass="label" style="-fx-font-size: 12px; -fx-padding: 0 0 0 5;" />
+                <DatePicker fx:id="filterEndDate" prefWidth="120" />
+            </HBox>
+            
             <Button text="Refrescar" onAction="#refreshTable" styleClass="button-secondary" style="-fx-font-size: 11px; -fx-padding: 4 10;" />
         </HBox>
 

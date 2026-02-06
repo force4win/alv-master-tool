@@ -15,6 +15,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.DatePicker;
+import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
@@ -35,6 +38,12 @@ public class TrackerConfigController {
     private Button toggleButton;
     @FXML
     private Label statusLabel;
+
+    // Filtros de fecha
+    @FXML
+    private DatePicker filterStartDate;
+    @FXML
+    private DatePicker filterEndDate;
 
     // Tabla de Resumen
     @FXML
@@ -61,6 +70,12 @@ public class TrackerConfigController {
         intervalField.setText(String.valueOf(settings.getIntervalMinutes()));
         if (autoStartCheckbox != null) {
             autoStartCheckbox.setSelected(settings.isAutoStartOnLogin());
+        }
+
+        // Inicializar fechas de filtro (Ayer y Hoy por defecto)
+        if (filterStartDate != null && filterEndDate != null) {
+            filterStartDate.setValue(LocalDate.now().minusDays(1));
+            filterEndDate.setValue(LocalDate.now());
         }
 
         updateStatusUI();
@@ -158,8 +173,21 @@ public class TrackerConfigController {
 
     @FXML
     private void refreshTable() {
-        List<TaskLog> logs = service.getLogs();
-        ObservableList<ActivitySummary> summaries = calculateSummaries(logs);
+        List<TaskLog> allLogs = service.getLogs();
+
+        LocalDate start = (filterStartDate != null) ? filterStartDate.getValue() : LocalDate.MIN;
+        LocalDate end = (filterEndDate != null) ? filterEndDate.getValue() : LocalDate.MAX;
+
+        List<TaskLog> filteredLogs = allLogs.stream()
+                .filter(log -> {
+                    LocalDate logDate = log.getTimestamp().toLocalDate();
+                    // !logDate.isBefore(start) equivale a logDate >= start
+                    // !logDate.isAfter(end) equivale a logDate <= end
+                    return !logDate.isBefore(start) && !logDate.isAfter(end);
+                })
+                .collect(Collectors.toList());
+
+        ObservableList<ActivitySummary> summaries = calculateSummaries(filteredLogs);
         activitiesTable.setItems(summaries);
         activitiesTable.refresh();
     }

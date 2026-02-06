@@ -17,6 +17,15 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        // Cargar el icono de la aplicación
+        try {
+            javafx.scene.image.Image icon = new javafx.scene.image.Image(
+                    App.class.getResourceAsStream("AlvMasterTool.png"));
+            stage.getIcons().add(icon);
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar el icono: " + e.getMessage());
+        }
+
         // Carga el archivo FXML 'login' desde los recursos
         scene = new Scene(loadFXML("login"), 640, 480);
         stage.setScene(scene);
