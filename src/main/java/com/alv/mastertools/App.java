@@ -13,6 +13,8 @@ import java.io.IOException;
  */
 public class App extends Application {
 
+    public static final boolean IS_DEV_MODE = true; // CAMBIAR A 'false' PARA PRODUCCION
+
     private static Scene scene;
 
     @Override

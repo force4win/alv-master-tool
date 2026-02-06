@@ -16,7 +16,8 @@ import java.util.Properties;
 
 public class FileDataProvider implements IDataProvider {
 
-    private static final String DIR_NAME = ".alv-master";
+    private static final String DIR_NAME_PROD = ".alv-master";
+    private static final String DIR_NAME_DEV = "DEV_.alv-master";
     private static final String SETTINGS_FILE = "settings.properties";
     private static final String LOGS_FILE = "activity_logs.csv";
     private static final DateTimeFormatter DZF = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -25,7 +26,8 @@ public class FileDataProvider implements IDataProvider {
 
     public FileDataProvider() {
         String userHome = System.getProperty("user.home");
-        this.storageDir = Paths.get(userHome, DIR_NAME);
+        String dirName = com.alv.mastertools.App.IS_DEV_MODE ? DIR_NAME_DEV : DIR_NAME_PROD;
+        this.storageDir = Paths.get(userHome, dirName);
         initialize();
     }
 
