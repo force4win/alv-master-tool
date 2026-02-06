@@ -32,13 +32,16 @@ public class PrimaryController {
         if (contentArea.getScene() != null) {
             String theme = TrackerService.get().getSettings().getTheme();
             Parent root = contentArea.getScene().getRoot();
+
+            // Limpiar temas anteriores
+            root.getStyleClass().removeAll("light-theme", "kids-theme");
+
             if ("light".equals(theme)) {
-                if (!root.getStyleClass().contains("light-theme")) {
-                    root.getStyleClass().add("light-theme");
-                }
-            } else {
-                root.getStyleClass().remove("light-theme");
+                root.getStyleClass().add("light-theme");
+            } else if ("kids".equals(theme)) {
+                root.getStyleClass().add("kids-theme");
             }
+            // "dark" es el default, así que no agregamos clase extra
         }
     }
 
@@ -72,14 +75,26 @@ public class PrimaryController {
         if (contentArea.getScene() != null) {
             Parent root = contentArea.getScene().getRoot();
             TrackerSettings settings = TrackerService.get().getSettings();
+            String currentTheme = settings.getTheme(); // "dark", "light", "kids"
 
-            if (root.getStyleClass().contains("light-theme")) {
-                root.getStyleClass().remove("light-theme");
-                settings.setTheme("dark");
-            } else {
+            // Limpiar clases
+            root.getStyleClass().removeAll("light-theme", "kids-theme");
+
+            String newTheme = "dark";
+
+            // Ciclo: dark -> light -> kids -> dark
+            if (currentTheme == null || "dark".equals(currentTheme)) {
+                newTheme = "light";
                 root.getStyleClass().add("light-theme");
-                settings.setTheme("light");
+            } else if ("light".equals(currentTheme)) {
+                newTheme = "kids";
+                root.getStyleClass().add("kids-theme");
+            } else {
+                newTheme = "dark";
+                // No class needed for dark
             }
+
+            settings.setTheme(newTheme);
             TrackerService.get().saveConfiguration();
         }
     }

@@ -52,6 +52,115 @@
     -color-input-border: #D8DEE9;
 }
 
+/* --- TEMA KIDS: "Cartoon Playground" --- */
+.root.kids-theme {
+    /* Paleta "Playtime" */
+    -color-bg-base: #FFF8E1;
+    /* Crema vainilla cálido */
+    -color-bg-card: #FFFFFF;
+    -color-bg-sidebar: #FFECB3;
+    /* Amarillo pastel */
+
+    -color-text-primary: #37474F;
+    /* Azul grisáceo oscuro */
+    -color-text-secondary: #0277BD;
+    /* Azul profundo */
+    -color-text-muted: #90A4AE;
+
+    -color-accent: #FF9800;
+    /* Naranja Juguete */
+    -color-accent-dark: #F57C00;
+
+    -color-success: #76FF03;
+    /* Verde Slime */
+    -color-success-hover: #64DD17;
+
+    -color-danger: #FF4081;
+    /* Rosa Chicle intenso */
+    -color-danger-hover: #F50057;
+
+    -color-input-bg: #FFFFFF;
+    -color-input-border: #4FC3F7;
+    /* Borde Azul Cielo */
+
+    /* Tipografía Juguetona */
+    -fx-font-family: 'Comic Sans MS', 'Verdana', sans-serif;
+    -fx-font-size: 16px;
+}
+
+/* --- OVERRIDES ESPECIFICOS PARA KIDS THEME (Formas y Efectos) --- */
+
+/* Botones con efecto 3D "Pop" */
+.root.kids-theme .button {
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-border-width: 0 0 4 0;
+    /* Borde inferior grueso para efecto 3d */
+    -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-cursor: hand;
+    -fx-effect: none;
+    /* Quitamos sombras difusas default */
+    -fx-font-weight: bold;
+}
+
+.root.kids-theme .button:pressed {
+    -fx-translate-y: 2;
+    /* Se hunde al clickear */
+    -fx-border-width: 0 0 0 0;
+    -fx-background-insets: 2 0 0 0;
+}
+
+.root.kids-theme .button-secondary {
+    -fx-border-width: 2;
+    -fx-border-style: dashed;
+    /* Bordes punteados estilo recorte */
+    -fx-border-color: -color-text-primary;
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-text-primary;
+}
+
+/* Inputs estilo "Bocadillo de comic" */
+.root.kids-theme .text-field,
+.root.kids-theme .password-field,
+.root.kids-theme .date-picker .text-field {
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-width: 3;
+    -fx-border-color: -color-input-border;
+    -fx-effect: none;
+}
+
+.root.kids-theme .text-field:focused {
+    -fx-border-color: -color-accent;
+}
+
+/* Tarjetas con borde grueso tipo Sticker */
+.root.kids-theme .card {
+    -fx-background-radius: 20;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 3;
+    -fx-border-radius: 18;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 0, 0, 4, 4);
+    /* Sombra sólida desplazada */
+}
+
+/* Tabla más amigable */
+.root.kids-theme .table-view .column-header-background {
+    -fx-background-color: -color-accent;
+    -fx-background-radius: 15 15 0 0;
+}
+
+.root.kids-theme .table-view .column-header .label {
+    -fx-text-fill: white;
+}
+
+.root.kids-theme .table-row-cell {
+    -fx-background-radius: 10;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #EEEEEE;
+}
+}
+
 /* --- LABELS --- */
 .label {
     -fx-text-fill: -color-text-primary;
