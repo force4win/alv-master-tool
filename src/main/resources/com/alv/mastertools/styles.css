@@ -441,6 +441,17 @@
     -fx-text-fill: -color-text-primary;
 }
 
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+.icon-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 50%;
+}
+
 /* --- TEMA SYNTHWAVE: "Neon Nights" --- */
 .root.synthwave-theme {
     -color-bg-base: #241235;

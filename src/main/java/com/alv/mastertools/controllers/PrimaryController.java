@@ -11,8 +11,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class PrimaryController {
 
@@ -21,6 +25,27 @@ public class PrimaryController {
 
     @FXML
     private ComboBox<String> themeSelector;
+
+    // Sidebar Components
+    @FXML
+    private VBox sidebar;
+    @FXML
+    private Button btnToggle;
+    @FXML
+    private Label lblMenu;
+    @FXML
+    private Label lblSystem;
+
+    @FXML
+    private Button btnHome;
+    @FXML
+    private Button btnTracker;
+    @FXML
+    private Button btnConfig;
+    @FXML
+    private Button btnLogout;
+
+    private boolean isSidebarCollapsed = false;
 
     @FXML
     public void initialize() {
@@ -44,8 +69,7 @@ public class PrimaryController {
     }
 
     private void initTheme() {
-        String savedTheme = TrackerService.get().getSettings().getTheme(); // "dark", "light", "kids", "matrix", etc.
-        // Mapear a mayúsculas para el combo
+        String savedTheme = TrackerService.get().getSettings().getTheme();
         String comboValue = "Dark";
         if ("light".equals(savedTheme)) {
             comboValue = "Light";
@@ -60,7 +84,6 @@ public class PrimaryController {
         } else if ("coffee".equals(savedTheme)) {
             comboValue = "Coffee";
         }
-
         themeSelector.setValue(comboValue);
     }
 
@@ -68,7 +91,6 @@ public class PrimaryController {
         if (contentArea.getScene() != null) {
             Parent root = contentArea.getScene().getRoot();
 
-            // Limpiar temas anteriores
             root.getStyleClass().removeAll(
                     "light-theme", "kids-theme", "matrix-theme",
                     "synthwave-theme", "dracula-theme", "coffee-theme");
@@ -86,12 +108,46 @@ public class PrimaryController {
             } else if ("coffee".equals(newTheme)) {
                 root.getStyleClass().add("coffee-theme");
             }
-            // "dark" es default
 
-            // Guardar configuración
             TrackerService.get().getSettings().setTheme(newTheme);
             TrackerService.get().saveConfiguration();
         }
+    }
+
+    @FXML
+    private void handleToggleSidebar() {
+        isSidebarCollapsed = !isSidebarCollapsed;
+
+        if (isSidebarCollapsed) {
+            // Colapsar
+            sidebar.setPrefWidth(60);
+            lblMenu.setVisible(false);
+            lblMenu.setManaged(false);
+            lblSystem.setVisible(false);
+            lblSystem.setManaged(false);
+
+            setButtonsContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        } else {
+            // Expandir
+            sidebar.setPrefWidth(250);
+            lblMenu.setVisible(true);
+            lblMenu.setManaged(true);
+            lblSystem.setVisible(true);
+            lblSystem.setManaged(true);
+
+            setButtonsContentDisplay(ContentDisplay.LEFT);
+        }
+    }
+
+    private void setButtonsContentDisplay(ContentDisplay display) {
+        if (btnHome != null)
+            btnHome.setContentDisplay(display);
+        if (btnTracker != null)
+            btnTracker.setContentDisplay(display);
+        if (btnConfig != null)
+            btnConfig.setContentDisplay(display);
+        if (btnLogout != null)
+            btnLogout.setContentDisplay(display);
     }
 
     @FXML

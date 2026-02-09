@@ -27,23 +27,71 @@
 
     <!-- SIDEBAR -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="250">
+        <VBox fx:id="sidebar" styleClass="sidebar" prefWidth="250">
             <children>
+                <!-- Header Sidebar -->
+                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+                    <Button fx:id="btnToggle" text="" onAction="#handleToggleSidebar" styleClass="icon-button">
+                        <graphic>
+                             <javafx.scene.image.ImageView fitHeight="40" fitWidth="40">
+                                <image>
+                                    <javafx.scene.image.Image url="@../Icono%20simple.png"/>
+                                </image>
+                            </javafx.scene.image.ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
+
                 <!-- Opciones -->
-                <VBox spacing="2" VBox.vgrow="ALWAYS" style="-fx-padding: 20 10;">
+                <VBox spacing="5" VBox.vgrow="ALWAYS" style="-fx-padding: 10;">
                     <children>
-                        <Label text="MENÚ PRINCIPAL" style="-fx-text-fill: -color-text-muted; -fx-font-size: 11px; -fx-padding: 0 0 5 10; -fx-font-weight: bold;"/>
-                        <Button text="INICIO" onAction="#showHome" maxWidth="Infinity" />
-                        <Button text="SEGUIMIENTO" onAction="#showTracker" maxWidth="Infinity" />
+                        <Label fx:id="lblMenu" text="MENÚ PRINCIPAL" style="-fx-text-fill: -color-text-muted; -fx-font-size: 11px; -fx-padding: 0 0 5 10; -fx-font-weight: bold;"/>
                         
-                        <Label text="SISTEMA" style="-fx-text-fill: -color-text-muted; -fx-font-size: 11px; -fx-padding: 15 0 5 10; -fx-font-weight: bold;"/>
-                        <Button text="Configuración" onAction="#showConfig" maxWidth="Infinity" />
+                        <Button fx:id="btnHome" text="INICIO" onAction="#showHome" maxWidth="Infinity" alignment="CENTER_LEFT">
+                            <graphic>
+                                <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
+                                    <image>
+                                        <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                    </image>
+                                </javafx.scene.image.ImageView>
+                            </graphic>
+                        </Button>
+
+                        <Button fx:id="btnTracker" text="SEGUIMIENTO" onAction="#showTracker" maxWidth="Infinity" alignment="CENTER_LEFT">
+                            <graphic>
+                                <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
+                                    <image>
+                                        <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                    </image>
+                                </javafx.scene.image.ImageView>
+                            </graphic>
+                        </Button>
+                        
+                        <Label fx:id="lblSystem" text="SISTEMA" style="-fx-text-fill: -color-text-muted; -fx-font-size: 11px; -fx-padding: 15 0 5 10; -fx-font-weight: bold;"/>
+                        
+                        <Button fx:id="btnConfig" text="Configuración" onAction="#showConfig" maxWidth="Infinity" alignment="CENTER_LEFT">
+                            <graphic>
+                                <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
+                                    <image>
+                                        <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                    </image>
+                                </javafx.scene.image.ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </VBox>
                 
                 <!-- Footer -->
                 <VBox style="-fx-padding: 20;">
-                    <Button text="Cerrar Sesión" onAction="#handleLogout" styleClass="button-danger" maxWidth="Infinity"/>
+                    <Button fx:id="btnLogout" text="Cerrar Sesión" onAction="#handleLogout" styleClass="button-danger" maxWidth="Infinity" alignment="CENTER_LEFT">
+                         <graphic>
+                            <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
+                                <image>
+                                    <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                </image>
+                            </javafx.scene.image.ImageView>
+                        </graphic>
+                    </Button>
                 </VBox>
             </children>
         </VBox>
