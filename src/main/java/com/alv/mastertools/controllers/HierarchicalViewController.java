@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -17,117 +18,208 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.alv.mastertools.App;
+
 public class HierarchicalViewController {
 
     @FXML
-    private HBox container;
+    private HBox navigationContainer; // The "Accordion" / Navigation Columns
+
+    @FXML
+    private VBox contentArea; // Dedicated Area for Notes and Content
 
     @FXML
     public void initialize() {
         // Cargar datos de prueba
         Item root = createMockData();
 
-        // Mostrar primer nivel (Lista de Temas Principales)
-        addPanel(root.children, 0, "Menú Principal");
+        // Inicializar navegación (Lista de Temas Principales)
+        addNavigationPanel(root.children, 0, "Menú Principal");
+
+        // Inicialmente, el área de contenido puede mostrar algo genérico o nada
+        showContent(null);
     }
 
-    private void addPanel(List<Item> items, int level, String title) {
-        // Crear el panel
-        VBox panel = new VBox(15);
+    private void addNavigationPanel(List<Item> items, int level, String title) {
+        // Crear panel de navegación (Columna del acordeón)
+        VBox panel = new VBox(0);
         panel.getStyleClass().add("hierarchical-panel");
-        panel.setMinWidth(300);
-        panel.setPrefWidth(300);
+        panel.setMinWidth(250); // Standard column width
+        panel.setPrefWidth(250);
 
-        // Guardar los datos en el panel para poder restaurarlo luego
+        // Guardar estado
         panel.setUserData(new PanelData(items, level, title));
 
-        // Asignar color según nivel
         String colorStyle = getColorForLevel(level);
-        panel.setStyle("-fx-padding: 30; -fx-background-color: " + colorStyle + "; -fx-background-radius: 0;");
+        panel.setStyle("-fx-background-color: " + colorStyle
+                + "; -fx-border-color: rgba(0,0,0,0.15); -fx-border-width: 0 1 0 0;");
 
-        // Titulo del panel
+        // --- Header (Solo título de navegación) ---
+        VBox headerBox = new VBox(10);
+        headerBox.setStyle("-fx-padding: 20 20 15 20; -fx-background-color: rgba(0,0,0,0.1);");
+
         Label lblTitle = new Label(title);
+        lblTitle.setWrapText(true);
         lblTitle.setStyle(
-                "-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 2, 0, 0, 0);");
-        panel.getChildren().add(lblTitle);
+                "-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 1, 0, 0, 1);");
+        headerBox.getChildren().add(lblTitle);
 
-        // Separador
-        Region line = new Region();
-        line.setPrefHeight(2);
-        line.setStyle("-fx-background-color: rgba(255,255,255,0.3);");
-        panel.getChildren().add(line);
+        panel.getChildren().add(headerBox);
 
-        // Lista de items
-        VBox listContainer = new VBox(15);
+        // --- Lista de Botones (Subtemas) ---
+        VBox listContainer = new VBox(8);
+        listContainer.setStyle("-fx-padding: 15;");
 
-        // 1. Agregar items existentes
         for (Item item : items) {
             Button btn = createItemButton(item, level, panel);
             listContainer.getChildren().add(btn);
         }
 
-        // 2. Botón "Agregar" al final
-        Button btnAdd = new Button("+ Agregar Tema");
+        // Botón "Agregar Subtema"
+        Button btnAdd = new Button("+ Crear nueva sección");
         btnAdd.setMaxWidth(Double.MAX_VALUE);
-        btnAdd.setPrefHeight(40);
+        btnAdd.setPrefHeight(35);
         btnAdd.setStyle(
-                "-fx-background-color: rgba(0,0,0,0.1); " +
-                        "-fx-text-fill: rgba(255,255,255,0.7); " +
-                        "-fx-border-color: rgba(255,255,255,0.5); " +
+                "-fx-background-color: transparent; " +
+                        "-fx-text-fill: rgba(255,255,255,0.6); " +
+                        "-fx-border-color: rgba(255,255,255,0.3); " +
                         "-fx-border-style: dashed; " +
                         "-fx-border-radius: 4; " +
-                        "-fx-cursor: hand;");
+                        "-fx-cursor: hand; -fx-font-size: 11px;");
         btnAdd.setOnAction(e -> handleAddItem(items, listContainer, level, panel));
 
-        // Hover effect para el boton agregar
-        btnAdd.setOnMouseEntered(e -> btnAdd.setStyle(btnAdd.getStyle()
-                .replace("-fx-background-color: rgba(0,0,0,0.1);", "-fx-background-color: rgba(255,255,255,0.2);")));
+        // Hover btn add
+        btnAdd.setOnMouseEntered(e -> btnAdd.setStyle(btnAdd.getStyle().replace("-fx-background-color: transparent;",
+                "-fx-background-color: rgba(255,255,255,0.1);")));
         btnAdd.setOnMouseExited(e -> btnAdd.setStyle(btnAdd.getStyle()
-                .replace("-fx-background-color: rgba(255,255,255,0.2);", "-fx-background-color: rgba(0,0,0,0.1);")));
+                .replace("-fx-background-color: rgba(255,255,255,0.1);", "-fx-background-color: transparent;")));
 
         listContainer.getChildren().add(btnAdd);
 
-        // Scroll si hay muchos items
+        // Scroll para la lista de navegación
         ScrollPane scroll = new ScrollPane(listContainer);
         scroll.setFitToWidth(true);
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
         panel.getChildren().add(scroll);
 
         // Animar entrada
-        TranslateTransition tt = new TranslateTransition(Duration.millis(300), panel);
+        TranslateTransition tt = new TranslateTransition(Duration.millis(250), panel);
         tt.setFromX(50);
         tt.setToX(0);
         tt.play();
 
-        container.getChildren().add(panel);
+        navigationContainer.getChildren().add(panel);
+    }
+
+    // --- CONTENT AREA LOGIC ---
+    // This updates the dedicated content area (Notes, Details)
+    private void showContent(Item selectedItem) {
+        contentArea.getChildren().clear();
+
+        if (selectedItem == null) {
+            Label lblEmpty = new Label("Seleccione un tema para ver su contenido.");
+            lblEmpty.setStyle("-fx-font-size: 14px; -fx-text-fill: -color-text-secondary; -fx-alignment: CENTER;");
+            lblEmpty.setMaxWidth(Double.MAX_VALUE);
+            lblEmpty.setMaxHeight(Double.MAX_VALUE);
+            contentArea.getChildren().add(lblEmpty);
+            return;
+        }
+
+        // Header Content
+        Label lblTitle = new Label(selectedItem.title);
+        lblTitle.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: -color-text-primary;");
+        contentArea.getChildren().add(lblTitle);
+
+        Label lblSubtitle = new Label("NOTAS Y ANOTACIONES");
+        lblSubtitle.setStyle(
+                "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: -color-accent; -fx-padding: 0 0 10 0;");
+        contentArea.getChildren().add(lblSubtitle);
+
+        // Scroll Container for Notes
+        VBox notesContainer = new VBox(15);
+        renderNotes(selectedItem, notesContainer);
+
+        ScrollPane notesScroll = new ScrollPane(notesContainer);
+        notesScroll.setFitToWidth(true);
+        notesScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+        // Remove borders
+        notesScroll.getStyleClass().add("edge-to-edge");
+        VBox.setVgrow(notesScroll, Priority.ALWAYS);
+
+        contentArea.getChildren().add(notesScroll);
+
+        // Input Area (Fixed at bottom)
+        HBox inputBox = new HBox(10);
+        inputBox.setAlignment(Pos.CENTER_LEFT);
+        inputBox.setStyle(
+                "-fx-padding: 15; -fx-background-color: -color-bg-base; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);");
+
+        TextArea noteInput = new TextArea();
+        noteInput.setPromptText("Escribir nueva nota...");
+        noteInput.setPrefRowCount(2);
+        noteInput.setWrapText(true);
+        HBox.setHgrow(noteInput, Priority.ALWAYS);
+
+        Button btnAddNote = new Button("Guardar Nota");
+        btnAddNote.getStyleClass().add("button-success");
+        btnAddNote.setPrefHeight(50);
+        btnAddNote.setOnAction(e -> {
+            String text = noteInput.getText();
+            if (text != null && !text.trim().isEmpty()) {
+                selectedItem.notes.add(text);
+                renderNotes(selectedItem, notesContainer);
+                noteInput.clear();
+            }
+        });
+
+        inputBox.getChildren().addAll(noteInput, btnAddNote);
+        contentArea.getChildren().add(inputBox);
+    }
+
+    private void renderNotes(Item item, VBox container) {
+        container.getChildren().clear();
+        if (item.notes.isEmpty()) {
+            Label empty = new Label("No hay notas registradas para este tema.");
+            empty.setStyle("-fx-text-fill: -color-text-muted; -fx-font-style: italic;");
+            container.getChildren().add(empty);
+            return;
+        }
+
+        for (String note : item.notes) {
+            Label lbl = new Label(note);
+            lbl.setWrapText(true);
+            lbl.setMaxWidth(Double.MAX_VALUE);
+            lbl.setStyle(
+                    "-fx-background-color: #fff9c4; " +
+                            "-fx-text-fill: #3e2723; " +
+                            "-fx-padding: 15; " +
+                            "-fx-background-radius: 4; " +
+                            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 2, 2); " +
+                            "-fx-font-family: 'Segoe UI', sans-serif; -fx-font-size: 14px;");
+            container.getChildren().add(lbl);
+        }
     }
 
     private Button createItemButton(Item item, int level, VBox panel) {
         Button btn = new Button(item.title);
         btn.setMaxWidth(Double.MAX_VALUE);
-        btn.setPrefHeight(50);
+        btn.setMinHeight(45);
 
-        // Estilo especifico botones
         btn.setStyle(
                 "-fx-background-color: rgba(0,0,0,0.2); " +
                         "-fx-text-fill: white; " +
-                        "-fx-alignment: CENTER-LEFT; " +
-                        "-fx-font-size: 16px; " +
+                        "-fx-alignment: CENTER_LEFT; " +
+                        "-fx-font-size: 14px; " +
                         "-fx-font-weight: bold; " +
-                        "-fx-border-color: rgba(255,255,255,0.4); " +
-                        "-fx-border-width: 1; " +
-                        "-fx-border-radius: 4; " +
-                        "-fx-background-radius: 4; " +
-                        "-fx-cursor: hand;");
+                        "-fx-padding: 10 15; " +
+                        "-fx-cursor: hand; -fx-background-radius: 4;");
 
-        // Hover
         btn.setOnMouseEntered(e -> btn.setStyle(btn.getStyle().replace("-fx-background-color: rgba(0,0,0,0.2);",
-                "-fx-background-color: rgba(255,255,255,0.3);")));
-        btn.setOnMouseExited(e -> btn.setStyle(btn.getStyle().replace("-fx-background-color: rgba(255,255,255,0.3);",
+                "-fx-background-color: rgba(255,255,255,0.25);")));
+        btn.setOnMouseExited(e -> btn.setStyle(btn.getStyle().replace("-fx-background-color: rgba(255,255,255,0.25);",
                 "-fx-background-color: rgba(0,0,0,0.2);")));
 
         btn.setOnAction(e -> handleItemSelect(item, level, panel));
@@ -136,25 +228,23 @@ public class HierarchicalViewController {
 
     private void handleAddItem(List<Item> items, VBox listContainer, int level, VBox panel) {
         TextInputDialog dialog = new TextInputDialog("");
-        dialog.setTitle("Nuevo Elemento");
+        dialog.setTitle("Nuevo");
         dialog.setHeaderText(null);
-        dialog.setContentText("Nombre del nuevo tema:");
-        // Estilo simple para el dialogo
-        dialog.getDialogPane().setStyle("-fx-background-color: -color-bg-card; -fx-text-fill: -color-text-primary;");
+        dialog.setContentText("Nombre:");
+
+        try {
+            dialog.getDialogPane().setStyle("-fx-background-color: #3B4252; -fx-text-fill: white;");
+        } catch (Exception e) {
+        }
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(name -> {
             if (name.trim().isEmpty())
                 return;
-
-            // 1. Crear en Modelo
             Item newItem = new Item(name);
             items.add(newItem);
 
-            // 2. Crear en Vista
             Button btn = createItemButton(newItem, level, panel);
-
-            // Insertar antes del último elemento (que es el botón Agregar)
             int index = listContainer.getChildren().size() - 1;
             if (index < 0)
                 index = 0;
@@ -163,39 +253,25 @@ public class HierarchicalViewController {
     }
 
     private void handleItemSelect(Item item, int level, VBox currentPanel) {
-        int currentIndex = container.getChildren().indexOf(currentPanel);
-
-        // 1. Eliminar paneles a la derecha (futuro)
-        if (currentIndex < container.getChildren().size() - 1) {
-            container.getChildren().subList(currentIndex + 1, container.getChildren().size()).clear();
+        // 1. Navigation Logic (The Accordion)
+        int currentIndex = navigationContainer.getChildren().indexOf(currentPanel);
+        if (currentIndex < navigationContainer.getChildren().size() - 1) {
+            navigationContainer.getChildren().subList(currentIndex + 1, navigationContainer.getChildren().size())
+                    .clear();
         }
 
-        // 2. Colapsar panel actual
         collapsePanel(currentPanel, item.title, level);
 
-        // 3. Mostrar siguiente nivel
-        // Siempre permitir agregar hijos, incluso si estaba vacío antes, iniciamos
-        // lista vacía si es null
         if (item.children == null) {
             item.children = new ArrayList<>();
         }
 
-        // Mostrar panel de hijos (incluso si está vacío, para poder agregar)
-        // OJO: Si es hoja (nivel muy profundo o intención explicita) se mostraría
-        // contenido.
-        // Aquí asumimos que siempre se pueden agregar hijos hasta que decidamos qué es
-        // "contenido final".
-        // Para simular "contenido" vs "categoría", podríamos chequear si tiene hijos o
-        // no, pero ahora queremos CONSTRUIR.
-        // Así que siempre abrimos panel de hijos para permitir agregar, EXCEPTO que sea
-        // un nivel muy profundo o usemos un flag.
-        // Usemso la lógica: Si tiene hijos O si el usuario acaba de crearlo (está
-        // vacío), mostramos panel para agregar hijos.
-        // ¿Cuándo mostramos contenido final? Quizás con un botón "Ver Detalle" dentro
-        // del item, pero el clic principal navega.
-        // Para este demo, asumiremos que siempre navegamos a hijos.
+        // Add next navigation panel
+        addNavigationPanel(item.children, level + 1, item.title);
 
-        addPanel(item.children, level + 1, item.title);
+        // 2. Content Logic (Notes Area)
+        // Correctly update the dedicated content area with *this* item's content
+        showContent(item);
     }
 
     private void collapsePanel(VBox panel, String selectedTitle, int level) {
@@ -211,12 +287,11 @@ public class HierarchicalViewController {
                 + "; -fx-border-color: rgba(0,0,0,0.2); -fx-border-width: 0 1 0 0;");
 
         Label rotLabel = new Label(selectedTitle);
-        rotLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 18px;");
+        rotLabel.setStyle("-fx-text-fill: rgba(255,255,255,0.9); -fx-font-weight: bold; -fx-font-size: 16px;");
         rotLabel.setRotate(-90);
         rotLabel.setMinWidth(Region.USE_PREF_SIZE);
 
         StackPane labelContainer = new StackPane(rotLabel);
-
         panel.getChildren().add(labelContainer);
 
         panel.setOnMouseClicked(e -> restorePanel(panel));
@@ -224,26 +299,29 @@ public class HierarchicalViewController {
     }
 
     private void restorePanel(VBox panel) {
-        int index = container.getChildren().indexOf(panel);
+        int index = navigationContainer.getChildren().indexOf(panel);
 
-        if (index < container.getChildren().size() - 1) {
-            container.getChildren().subList(index + 1, container.getChildren().size()).clear();
+        if (index < navigationContainer.getChildren().size() - 1) {
+            navigationContainer.getChildren().subList(index + 1, navigationContainer.getChildren().size()).clear();
         }
 
         PanelData data = (PanelData) panel.getUserData();
         if (data != null) {
             panel.getChildren().clear();
-            container.getChildren().remove(panel);
-            addPanel(data.items, data.level, data.title);
+            navigationContainer.getChildren().remove(panel);
+            addNavigationPanel(data.items, data.level, data.title);
+            // Optionally, select nothing in content area or keep previous? Assume clear for
+            // simplicity.
+            // showContent(null); // Or keep last viewed? User likely wants to re-navigate.
         }
     }
 
     private String getColorForLevel(int level) {
         switch (level % 5) {
             case 0:
-                return "#9b59b6"; // Purple
+                return "#8e44ad"; // Purple
             case 1:
-                return "#e67e22"; // Orange
+                return "#d35400"; // Pumpkin
             case 2:
                 return "#2980b9"; // Blue
             case 3:
@@ -270,27 +348,34 @@ public class HierarchicalViewController {
     private static class Item {
         String title;
         List<Item> children;
+        List<String> notes;
 
         Item(String title) {
             this.title = title;
             this.children = new ArrayList<>();
+            this.notes = new ArrayList<>();
         }
 
         void addChild(Item item) {
             children.add(item);
+        }
+
+        Item withNote(String note) {
+            this.notes.add(note);
+            return this;
         }
     }
 
     private Item createMockData() {
         Item root = new Item("ROOT");
 
-        Item t1 = new Item("Tema 1");
+        Item t1 = new Item("Planificación").withNote("Objetivos Q1 definidos");
         root.addChild(t1);
 
-        Item t2 = new Item("Tema 2");
+        Item t2 = new Item("Desarrollo");
         root.addChild(t2);
-        t2.addChild(new Item("Tema 2.1"));
-        t2.addChild(new Item("Tema 2.2"));
+        t2.addChild(new Item("Backend").withNote("API REST completa"));
+        t2.addChild(new Item("Frontend"));
 
         return root;
     }
