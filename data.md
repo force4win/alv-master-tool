@@ -19,6 +19,7 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
   - Sistema de Exportación y Limpieza de datos (CSV).
   - Generación de Instalador/Ejecutable portable (.exe) con `jpackage`.
   - Mejoras de usabilidad (Scrolls, Filtros de Fecha).
+  - **Nuevo Módulo: Explorador Jerárquico (Miller Columns)** con Notas Integradas.
 - **Estado**: Funcional y empaquetable. Versión 0.0.1 lista.
 
 ## 3. Registro de Sesiones
@@ -62,3 +63,18 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
   - **Filtros de Fecha**: Agregados `DatePicker` (Desde/Hasta) en la vista de seguimiento para filtrar el historial.
   - **Responsividad**: Se envolvieron las vistas `user_config` y `tracker_config` en `ScrollPane` para asegurar visibilidad en pantallas pequeñas.
   - Restauración de etiquetas de estado y corrección de imports en FXML.
+
+### Sesión: Explorador Jerárquico y Notas (Miller Columns)
+- **Implementación de Navegación Jerárquica**:
+  - Se creó el controlador `HierarchicalViewController` y la vista `hierarchical_view.fxml`.
+  - Diseño estilo **Miller Columns** (Acordeón Horizontal) para navegación profunda de temas y subtemas.
+  - Código de colores por nivel de profundidad para mejorar la orientación visual.
+- **Sistema de Contenido y Notas**:
+  - **Separación de Áreas**: Se dividió la vista en dos zonas claras:
+    1.  **Navegación (Izquierda)**: Columnas dinámicas que se expanden hacia la derecha.
+    2.  **Contenido (Derecha/Fondo)**: Panel "elástico" (`HBox.hgrow="ALWAYS"`) que muestra la información del tema seleccionado.
+  - **Notas Adhesivas**: Implementación visual de notas tipo "Sticky Note" dentro del área de contenido.
+  - **Edición**: Capacidad de agregar nuevas notas y nuevos subtemas dinámicamente desde la UI.
+- **Integración**:
+  - Se agregó la opción "EXPLORADOR" al menú principal en `primary.fxml`.
+  - Ajuste de layout para manejo correcto del espacio disponible (Scroll horizontal + Contenido fluido).
