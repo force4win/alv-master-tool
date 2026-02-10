@@ -41,6 +41,8 @@ public class PrimaryController {
     @FXML
     private Button btnTracker;
     @FXML
+    private Button btnExplorer;
+    @FXML
     private Button btnConfig;
     @FXML
     private Button btnLogout;
@@ -144,6 +146,8 @@ public class PrimaryController {
             btnHome.setContentDisplay(display);
         if (btnTracker != null)
             btnTracker.setContentDisplay(display);
+        if (btnExplorer != null)
+            btnExplorer.setContentDisplay(display);
         if (btnConfig != null)
             btnConfig.setContentDisplay(display);
         if (btnLogout != null)
@@ -158,6 +162,11 @@ public class PrimaryController {
     @FXML
     public void showTracker() {
         loadView("tracker_config");
+    }
+
+    @FXML
+    public void showExplorer() {
+        loadView("hierarchical_view");
     }
 
     @FXML

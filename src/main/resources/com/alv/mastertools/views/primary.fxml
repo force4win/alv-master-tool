@@ -66,6 +66,16 @@
                                 </javafx.scene.image.ImageView>
                             </graphic>
                         </Button>
+
+                        <Button fx:id="btnExplorer" text="EXPLORADOR" onAction="#showExplorer" maxWidth="Infinity" alignment="CENTER_LEFT">
+                            <graphic>
+                                <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
+                                    <image>
+                                        <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                    </image>
+                                </javafx.scene.image.ImageView>
+                            </graphic>
+                        </Button>
                         
                         <Label fx:id="lblSystem" text="SISTEMA" style="-fx-text-fill: -color-text-muted; -fx-font-size: 11px; -fx-padding: 15 0 5 10; -fx-font-weight: bold;"/>
                         
