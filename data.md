@@ -78,3 +78,8 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
 - **Integración**:
   - Se agregó la opción "EXPLORADOR" al menú principal en `primary.fxml`.
   - Ajuste de layout para manejo correcto del espacio disponible (Scroll horizontal + Contenido fluido).
+
+### Sesión: Maximización de Ventana tras Login
+- **Mejora UI/UX**:
+  - Se modificó `LoginController.java` para llamar a `App.maximizeWindow()` después de una autenticación exitosa.
+  - Se agregó el método estático `maximizeWindow()` en `App.java` para exponer la capacidad de maximizar el `Stage` actual.

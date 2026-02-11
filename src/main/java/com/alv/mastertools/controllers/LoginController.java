@@ -48,6 +48,7 @@ public class LoginController {
             // Navegación exitosa a la vista principal
             try {
                 App.setRoot("primary");
+                App.maximizeWindow();
             } catch (IOException e) {
                 errorLabel.setText("Error al cargar la vista principal.");
                 e.printStackTrace();
