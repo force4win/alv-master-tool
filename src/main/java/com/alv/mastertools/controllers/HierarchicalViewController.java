@@ -43,13 +43,13 @@ public class HierarchicalViewController {
         Item root = createMockData();
 
         // Inicializar navegación (Lista de Temas Principales)
-        addNavigationPanel(root.children, 0, "Menú Principal");
+        addNavigationPanel(root.children, 0, "Menú Principal", null);
 
         // Inicialmente mostrar contenido vacío o bienvenida
         showContent(null);
     }
 
-    private void addNavigationPanel(List<Item> items, int level, String title) {
+    private void addNavigationPanel(List<Item> items, int level, String title, Item parentItem) {
         // Crear panel de navegación
         VBox panel = new VBox(0);
         panel.getStyleClass().add("hierarchical-panel");
@@ -57,7 +57,7 @@ public class HierarchicalViewController {
         panel.setPrefWidth(250);
 
         // Guardar estado
-        panel.setUserData(new PanelData(items, level, title));
+        panel.setUserData(new PanelData(items, level, title, parentItem));
 
         String colorStyle = getColorForLevel(level);
         panel.setStyle("-fx-background-color: " + colorStyle
@@ -216,6 +216,7 @@ public class HierarchicalViewController {
         // Main Note Container
         VBox noteBox = new VBox();
         noteBox.setPrefSize(data.width, data.height);
+        noteBox.setMinSize(100, 100); // Prevent shrinking below usable size
         noteBox.setLayoutX(data.x);
         noteBox.setLayoutY(data.y);
         noteBox.setStyle(
@@ -227,6 +228,8 @@ public class HierarchicalViewController {
         // Drag Handle (Top Bar)
         HBox dragHandle = new HBox();
         dragHandle.setPrefHeight(20);
+        dragHandle.setMinHeight(20); // Always keep this height
+        dragHandle.setMaxHeight(20);
         dragHandle.setStyle("-fx-background-color: rgba(251, 192, 45, 0.3); -fx-cursor: move;");
 
         // Content (TextArea for editing or Label)
@@ -362,7 +365,7 @@ public class HierarchicalViewController {
 
         if (item.children == null)
             item.children = new ArrayList<>();
-        addNavigationPanel(item.children, level + 1, item.title);
+        addNavigationPanel(item.children, level + 1, item.title, item);
         showContent(item);
     }
 
@@ -394,8 +397,8 @@ public class HierarchicalViewController {
         if (data != null) {
             panel.getChildren().clear();
             navigationContainer.getChildren().remove(panel);
-            addNavigationPanel(data.items, data.level, data.title);
-            // showContent(null); // Optional: clear content area
+            addNavigationPanel(data.items, data.level, data.title, data.parentItem);
+            showContent(data.parentItem);
         }
     }
 
@@ -420,11 +423,13 @@ public class HierarchicalViewController {
         List<Item> items;
         int level;
         String title;
+        Item parentItem;
 
-        PanelData(List<Item> items, int level, String title) {
+        PanelData(List<Item> items, int level, String title, Item parentItem) {
             this.items = items;
             this.level = level;
             this.title = title;
+            this.parentItem = parentItem;
         }
     }
 
