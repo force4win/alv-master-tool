@@ -151,15 +151,19 @@ public class HierarchicalViewController {
 
         // Free-form Container for Notes (Canvas)
         Pane notesContainer = new Pane();
-        notesContainer.setStyle("-fx-background-color: transparent;");
-        notesContainer.setPrefSize(2000, 2000); // Large canvas
+        // Visual indicator: Dashed border and subtle background to mark the workspace
+        notesContainer.setStyle(
+                "-fx-background-color: rgba(0,0,0,0.03); -fx-border-color: rgba(128,128,128,0.3); -fx-border-style: dashed; -fx-border-width: 2;");
+        notesContainer.setPrefSize(2000, 2000);
+        notesContainer.setMinSize(2000, 2000); // Force scrollbars to appear
 
         renderNotes(selectedItem, notesContainer);
 
         ScrollPane notesScroll = new ScrollPane(notesContainer);
-        notesScroll.setFitToWidth(true);
-        notesScroll.setFitToHeight(true);
-        notesScroll.setPannable(true); // Allow panning with mouse if needed
+        // Disable fit-to to allow 2D scrolling over the large canvas
+        notesScroll.setFitToWidth(false);
+        notesScroll.setFitToHeight(false);
+        notesScroll.setPannable(true); // Allow panning with mouse (grab and move)
         notesScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
         notesScroll.getStyleClass().add("edge-to-edge");
         VBox.setVgrow(notesScroll, Priority.ALWAYS);
@@ -216,7 +220,9 @@ public class HierarchicalViewController {
         // Main Note Container
         VBox noteBox = new VBox();
         noteBox.setPrefSize(data.width, data.height);
-        noteBox.setMinSize(100, 100); // Prevent shrinking below usable size
+        // Removed fixed min size to allow free resizing,
+        // relying on resize logic and component min sizes to prevent disappearance
+        noteBox.setMinSize(40, 40);
         noteBox.setLayoutX(data.x);
         noteBox.setLayoutY(data.y);
         noteBox.setStyle(
@@ -258,6 +264,7 @@ public class HierarchicalViewController {
             dragDelta.x = noteBox.getLayoutX() - e.getSceneX();
             dragDelta.y = noteBox.getLayoutY() - e.getSceneY();
             noteBox.toFront(); // Move to top
+            e.consume();
         });
         dragHandle.setOnMouseDragged(e -> {
             double newX = e.getSceneX() + dragDelta.x;
@@ -267,30 +274,17 @@ public class HierarchicalViewController {
             noteBox.setLayoutY(newY);
             data.x = newX;
             data.y = newY;
+            e.consume();
         });
 
         // --- RESIZE LOGIC ---
         resizeHandle.setOnMousePressed(e -> {
             dragDelta.x = e.getX(); // Store offset within handle
             dragDelta.y = e.getY();
+            e.consume();
         });
         resizeHandle.setOnMouseDragged(e -> {
-            // Calculate new size based on mouse position relative to the noteBox
-            // We need scene coordinates logic or simpler local coordinates logic
-            // Simple approach: calculate delta from button press
-            // But simpler: just set size based on mouse position relative to noteBox
-            // top-left
-            // Since the event is on the resize handle, getting SceneX/Y difference is safer
-
-            // Actually, simply using the mouse location relative to the parent Pane (if we
-            // could get it)
-            // or calculating delta.
-
-            // Let's use the local coordinates of the drag.
-            // We want: newWidth = currentWidth + (mouseX - startMouseX)
-            // But since we are dragging the handle which moves, it's tricky.
-            // Better: use the scene coordinates of the mouse minus the scene coordinates of
-            // the note box.
+            // Calculate new size based on mouse position
 
             double mouseX = e.getSceneX();
             double mouseY = e.getSceneY();
@@ -300,14 +294,16 @@ public class HierarchicalViewController {
             double newWidth = mouseX - noteX;
             double newHeight = mouseY - noteY;
 
-            if (newWidth > 100) {
+            // Allow resizing down to a very small size (30px)
+            if (newWidth > 30) {
                 noteBox.setPrefWidth(newWidth);
                 data.width = newWidth;
             }
-            if (newHeight > 100) {
+            if (newHeight > 30) {
                 noteBox.setPrefHeight(newHeight);
                 data.height = newHeight;
             }
+            e.consume();
         });
 
         return noteBox;
