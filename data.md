@@ -83,3 +83,12 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
 - **Mejora UI/UX**:
   - Se modificó `LoginController.java` para llamar a `App.maximizeWindow()` después de una autenticación exitosa.
   - Se agregó el método estático `maximizeWindow()` en `App.java` para exponer la capacidad de maximizar el `Stage` actual.
+
+### Sesión: Notas Post-It (Draggable & Resizable)
+- **Mejora en Notas**:
+  - Se transformó el sistema de notas para soportar posicionamiento libre y redimensionado.
+  - **Estructura de Datos**: Se actualizó `Item` para usar `List<NoteData>` en lugar de `List<String>`, almacenando posición (x, y) y tamaño (width, height).
+  - **Interacción**:
+    - **Draggable**: Las notas pueden moverse libremente por el área de contenido mediante arrastrar y soltar desde la barra superior.
+    - **Resizable**: Se agregó un control en la esquina inferior derecha para cambiar el tamaño de la nota.
+  - **UI**: Cambio de contenedor de `VBox` a `Pane` para permitir posicionamiento absoluto. Estilo visual mejorado con bordes y sombras tipo Post-It.

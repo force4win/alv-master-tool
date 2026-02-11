@@ -10,11 +10,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -144,12 +149,17 @@ public class HierarchicalViewController {
                 "-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: -color-accent; -fx-padding: 5 0 15 0;");
         contentArea.getChildren().add(lblSubtitle);
 
-        // Scroll Container for Notes
-        VBox notesContainer = new VBox(15);
+        // Free-form Container for Notes (Canvas)
+        Pane notesContainer = new Pane();
+        notesContainer.setStyle("-fx-background-color: transparent;");
+        notesContainer.setPrefSize(2000, 2000); // Large canvas
+
         renderNotes(selectedItem, notesContainer);
 
         ScrollPane notesScroll = new ScrollPane(notesContainer);
         notesScroll.setFitToWidth(true);
+        notesScroll.setFitToHeight(true);
+        notesScroll.setPannable(true); // Allow panning with mouse if needed
         notesScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
         notesScroll.getStyleClass().add("edge-to-edge");
         VBox.setVgrow(notesScroll, Priority.ALWAYS);
@@ -174,7 +184,8 @@ public class HierarchicalViewController {
         btnAddNote.setOnAction(e -> {
             String text = noteInput.getText();
             if (text != null && !text.trim().isEmpty()) {
-                selectedItem.notes.add(text);
+                // Add new note at default position
+                selectedItem.notes.add(new NoteData(text, 50, 50, 200, 150));
                 renderNotes(selectedItem, notesContainer);
                 noteInput.clear();
             }
@@ -184,28 +195,123 @@ public class HierarchicalViewController {
         contentArea.getChildren().add(inputBox);
     }
 
-    private void renderNotes(Item item, VBox container) {
+    private void renderNotes(Item item, Pane container) {
         container.getChildren().clear();
         if (item.notes.isEmpty()) {
-            Label empty = new Label("No hay notas registradas para este tema.");
+            Label empty = new Label("No hay notas registradas. Agrega una abajo.");
             empty.setStyle("-fx-text-fill: -color-text-muted; -fx-font-style: italic;");
+            empty.setLayoutX(20);
+            empty.setLayoutY(20);
             container.getChildren().add(empty);
             return;
         }
 
-        for (String note : item.notes) {
-            Label lbl = new Label(note);
-            lbl.setWrapText(true);
-            lbl.setMaxWidth(Double.MAX_VALUE);
-            lbl.setStyle(
-                    "-fx-background-color: #fff9c4; " +
-                            "-fx-text-fill: #3e2723; " +
-                            "-fx-padding: 15; " +
-                            "-fx-background-radius: 4; " +
-                            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 2, 2); " +
-                            "-fx-font-family: 'Segoe UI', sans-serif; -fx-font-size: 14px;");
-            container.getChildren().add(lbl);
+        for (NoteData note : item.notes) {
+            Node noteNode = createDraggableNote(note);
+            container.getChildren().add(noteNode);
         }
+    }
+
+    private Node createDraggableNote(NoteData data) {
+        // Main Note Container
+        VBox noteBox = new VBox();
+        noteBox.setPrefSize(data.width, data.height);
+        noteBox.setLayoutX(data.x);
+        noteBox.setLayoutY(data.y);
+        noteBox.setStyle(
+                "-fx-background-color: #fff9c4; " +
+                        "-fx-border-color: #fbc02d; " +
+                        "-fx-border-width: 1; " +
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 3, 3);");
+
+        // Drag Handle (Top Bar)
+        HBox dragHandle = new HBox();
+        dragHandle.setPrefHeight(20);
+        dragHandle.setStyle("-fx-background-color: rgba(251, 192, 45, 0.3); -fx-cursor: move;");
+
+        // Content (TextArea for editing or Label)
+        TextArea contentObj = new TextArea(data.content);
+        contentObj.setWrapText(true);
+        contentObj.setStyle(
+                "-fx-control-inner-background: #fff9c4; -fx-background-color: transparent; -fx-text-fill: #3e2723; -fx-border-width: 0; -fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
+        VBox.setVgrow(contentObj, Priority.ALWAYS);
+
+        // Update content on change
+        contentObj.textProperty().addListener((obs, old, newVal) -> data.content = newVal);
+
+        // Resize Handle
+        Label resizeHandle = new Label("◢");
+        resizeHandle.setStyle("-fx-text-fill: #f9a825; -fx-cursor: se-resize; -fx-font-size: 10px;");
+        HBox resizeBox = new HBox(resizeHandle);
+        resizeBox.setAlignment(Pos.BOTTOM_RIGHT);
+        resizeBox.setPadding(new javafx.geometry.Insets(2));
+        resizeBox.setStyle("-fx-background-color: transparent;");
+
+        noteBox.getChildren().addAll(dragHandle, contentObj, resizeBox);
+
+        // --- DRAG LOGIC ---
+        final Delta dragDelta = new Delta();
+        dragHandle.setOnMousePressed(e -> {
+            dragDelta.x = noteBox.getLayoutX() - e.getSceneX();
+            dragDelta.y = noteBox.getLayoutY() - e.getSceneY();
+            noteBox.toFront(); // Move to top
+        });
+        dragHandle.setOnMouseDragged(e -> {
+            double newX = e.getSceneX() + dragDelta.x;
+            double newY = e.getSceneY() + dragDelta.y;
+            // Boundaries check could go here
+            noteBox.setLayoutX(newX);
+            noteBox.setLayoutY(newY);
+            data.x = newX;
+            data.y = newY;
+        });
+
+        // --- RESIZE LOGIC ---
+        resizeHandle.setOnMousePressed(e -> {
+            dragDelta.x = e.getX(); // Store offset within handle
+            dragDelta.y = e.getY();
+        });
+        resizeHandle.setOnMouseDragged(e -> {
+            // Calculate new size based on mouse position relative to the noteBox
+            // We need scene coordinates logic or simpler local coordinates logic
+            // Simple approach: calculate delta from button press
+            // But simpler: just set size based on mouse position relative to noteBox
+            // top-left
+            // Since the event is on the resize handle, getting SceneX/Y difference is safer
+
+            // Actually, simply using the mouse location relative to the parent Pane (if we
+            // could get it)
+            // or calculating delta.
+
+            // Let's use the local coordinates of the drag.
+            // We want: newWidth = currentWidth + (mouseX - startMouseX)
+            // But since we are dragging the handle which moves, it's tricky.
+            // Better: use the scene coordinates of the mouse minus the scene coordinates of
+            // the note box.
+
+            double mouseX = e.getSceneX();
+            double mouseY = e.getSceneY();
+            double noteX = noteBox.localToScene(0, 0).getX();
+            double noteY = noteBox.localToScene(0, 0).getY();
+
+            double newWidth = mouseX - noteX;
+            double newHeight = mouseY - noteY;
+
+            if (newWidth > 100) {
+                noteBox.setPrefWidth(newWidth);
+                data.width = newWidth;
+            }
+            if (newHeight > 100) {
+                noteBox.setPrefHeight(newHeight);
+                data.height = newHeight;
+            }
+        });
+
+        return noteBox;
+    }
+
+    private static class Delta {
+        double x, y;
     }
 
     private Button createItemButton(Item item, int level, VBox panel) {
@@ -325,7 +431,7 @@ public class HierarchicalViewController {
     private static class Item {
         String title;
         List<Item> children;
-        List<String> notes;
+        List<NoteData> notes;
 
         Item(String title) {
             this.title = title;
@@ -337,9 +443,23 @@ public class HierarchicalViewController {
             children.add(item);
         }
 
-        Item withNote(String note) {
-            this.notes.add(note);
+        Item withNote(String content) {
+            // Default Post-It Style
+            this.notes.add(new NoteData(content, 50 + (notes.size() * 30), 50 + (notes.size() * 30), 220, 180));
             return this;
+        }
+    }
+
+    private static class NoteData {
+        String content;
+        double x, y, width, height;
+
+        NoteData(String content, double x, double y, double width, double height) {
+            this.content = content;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
         }
     }
 
