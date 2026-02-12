@@ -35,7 +35,7 @@
                         <graphic>
                              <javafx.scene.image.ImageView fitHeight="40" fitWidth="40">
                                 <image>
-                                    <javafx.scene.image.Image url="@../Icono%20simple.png"/>
+                                    <javafx.scene.image.Image url="@../icono_simple.png"/>
                                 </image>
                             </javafx.scene.image.ImageView>
                         </graphic>
@@ -51,7 +51,7 @@
                             <graphic>
                                 <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
                                     <image>
-                                        <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                        <javafx.scene.image.Image url="@../icono_generico.png"/>
                                     </image>
                                 </javafx.scene.image.ImageView>
                             </graphic>
@@ -61,7 +61,7 @@
                             <graphic>
                                 <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
                                     <image>
-                                        <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                        <javafx.scene.image.Image url="@../icono_generico.png"/>
                                     </image>
                                 </javafx.scene.image.ImageView>
                             </graphic>
@@ -71,7 +71,7 @@
                             <graphic>
                                 <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
                                     <image>
-                                        <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                        <javafx.scene.image.Image url="@../icono_generico.png"/>
                                     </image>
                                 </javafx.scene.image.ImageView>
                             </graphic>
@@ -83,7 +83,7 @@
                             <graphic>
                                 <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
                                     <image>
-                                        <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                        <javafx.scene.image.Image url="@../icono_generico.png"/>
                                     </image>
                                 </javafx.scene.image.ImageView>
                             </graphic>
@@ -97,7 +97,7 @@
                          <graphic>
                             <javafx.scene.image.ImageView fitHeight="20" fitWidth="20">
                                 <image>
-                                    <javafx.scene.image.Image url="@../icono%20generico.png"/>
+                                    <javafx.scene.image.Image url="@../icono_generico.png"/>
                                 </image>
                             </javafx.scene.image.ImageView>
                         </graphic>
