@@ -107,4 +107,5 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
 - **Funcionalidad de Borrado**:
   - **Borrado Individual**: Se mejoró la visibilidad y funcionalidad del botón "X" en las notas. Se solucionó el conflicto con el evento de arrastre (drag) consumiendo el evento `MousePressed`.
   - **Borrado Masivo**: Se agregó un botón "Borrar Todas" en el área de input, incluyendo un diálogo de confirmación para evitar borrados accidentales.
+  - **Borrado de Temas**: Se implementó la capacidad de eliminar temas y subtemas desde la navegación. Cada elemento de la lista ahora tiene un botón "X" que permite remover la sección completa (incluyendo hijos y notas) tras confirmación.
 

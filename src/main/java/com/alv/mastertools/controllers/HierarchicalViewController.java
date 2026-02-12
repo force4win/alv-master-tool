@@ -20,6 +20,8 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.SVGPath;
+import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,8 +79,8 @@ public class HierarchicalViewController {
         VBox listContainer = new VBox(8);
         listContainer.setStyle("-fx-padding: 15;");
         for (Item item : items) {
-            Button btn = createItemButton(item, level, panel);
-            listContainer.getChildren().add(btn);
+            Node node = createItemNode(item, items, listContainer, level, panel);
+            listContainer.getChildren().add(node);
         }
 
         Button btnAdd = new Button("+ Nueva sección");
@@ -364,7 +366,10 @@ public class HierarchicalViewController {
         double x, y;
     }
 
-    private Button createItemButton(Item item, int level, VBox panel) {
+    private Node createItemNode(Item item, List<Item> itemsList, VBox listContainer, int level, VBox panel) {
+        HBox row = new HBox(8);
+        row.setAlignment(Pos.CENTER_LEFT);
+
         Button btn = new Button(item.title);
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setMinHeight(45);
@@ -375,7 +380,54 @@ public class HierarchicalViewController {
         btn.setOnMouseExited(e -> btn.setStyle(btn.getStyle().replace("-fx-background-color: rgba(255,255,255,0.25);",
                 "-fx-background-color: rgba(0,0,0,0.2);")));
         btn.setOnAction(e -> handleItemSelect(item, level, panel));
-        return btn;
+
+        HBox.setHgrow(btn, Priority.ALWAYS);
+
+        Button btnDelete = new Button();
+        btnDelete.setMinWidth(30);
+        btnDelete.setPrefWidth(30);
+        btnDelete.setPrefHeight(30);
+
+        SVGPath icon = new SVGPath();
+        icon.setContent("M 4 4 L 10 10 M 10 4 L 4 10"); // Simple X
+        icon.setStyle("-fx-stroke: #b71c1c; -fx-stroke-width: 2; -fx-fill: transparent;");
+
+        btnDelete.setGraphic(icon);
+
+        // White background, red border
+        btnDelete.setStyle(
+                "-fx-background-color: white; -fx-cursor: hand; -fx-background-radius: 4; -fx-border-color: #ffcdd2; -fx-border-radius: 4;");
+
+        btnDelete.setOnMouseEntered(
+                e -> {
+                    btnDelete.setStyle(
+                            "-fx-background-color: #ffcdd2; -fx-cursor: hand; -fx-background-radius: 4; -fx-border-color: #b71c1c; -fx-border-radius: 4;");
+                    icon.setStyle("-fx-stroke: #b71c1c; -fx-stroke-width: 2; -fx-fill: transparent;");
+                });
+        btnDelete.setOnMouseExited(e -> {
+            btnDelete.setStyle(
+                    "-fx-background-color: white; -fx-cursor: hand; -fx-background-radius: 4; -fx-border-color: #ffcdd2; -fx-border-radius: 4;");
+            icon.setStyle("-fx-stroke: #b71c1c; -fx-stroke-width: 2; -fx-fill: transparent;");
+        });
+
+        btnDelete.setOnAction(e -> {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Eliminar Tema");
+            alert.setHeaderText("¿Eliminar '" + item.title + "'?");
+            alert.setContentText(
+                    "Se eliminarán también todos los subtemas y notas contenidos. Esta acción no se puede deshacer.");
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == javafx.scene.control.ButtonType.OK) {
+                    itemsList.remove(item);
+                    listContainer.getChildren().remove(row);
+                }
+            });
+        });
+
+        row.getChildren().addAll(btn, btnDelete);
+        return row;
     }
 
     private void handleAddItem(List<Item> items, VBox listContainer, int level, VBox panel) {
@@ -393,11 +445,11 @@ public class HierarchicalViewController {
                 return;
             Item newItem = new Item(name);
             items.add(newItem);
-            Button btn = createItemButton(newItem, level, panel);
+            Node node = createItemNode(newItem, items, listContainer, level, panel);
             int index = listContainer.getChildren().size() - 1;
             if (index < 0)
                 index = 0;
-            listContainer.getChildren().add(index, btn);
+            listContainer.getChildren().add(index, node);
         });
     }
 
