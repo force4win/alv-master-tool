@@ -124,4 +124,26 @@ public class FileDataProvider implements IDataProvider {
         }
         return logs;
     }
+
+    @Override
+    public void saveTopics(com.alv.mastertools.models.TopicItem root) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(storageDir.resolve("topics.dat")))) {
+            oos.writeObject(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public com.alv.mastertools.models.TopicItem loadTopics() {
+        Path file = storageDir.resolve("topics.dat");
+        if (Files.exists(file)) {
+            try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(file))) {
+                return (com.alv.mastertools.models.TopicItem) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 }

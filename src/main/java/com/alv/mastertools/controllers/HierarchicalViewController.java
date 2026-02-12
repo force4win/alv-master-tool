@@ -27,8 +27,13 @@ import java.util.List;
 import java.util.Optional;
 
 import com.alv.mastertools.App;
+import com.alv.mastertools.models.NoteData;
+import com.alv.mastertools.models.TopicItem;
+import com.alv.mastertools.persistence.RepositoryFactory;
 
 public class HierarchicalViewController {
+
+    private TopicItem root;
 
     @FXML
     private ScrollPane mainScroll; // The root scrollpane (injected via fxml now)
@@ -41,17 +46,28 @@ public class HierarchicalViewController {
 
     @FXML
     public void initialize() {
-        // Cargar datos de prueba
-        Item root = createMockData();
+        // Cargar datos
+        root = RepositoryFactory.getProvider().loadTopics();
+        if (root == null) {
+            root = new TopicItem("ROOT");
+            // Optional: Add default structure if empty
+            // Item t1 = new Item("Ejemplo"); root.addChild(t1);
+        }
 
         // Inicializar navegación (Lista de Temas Principales)
-        addNavigationPanel(root.children, 0, "Menú Principal", null);
+        addNavigationPanel(root.getChildren(), 0, "Menú Principal", null);
 
         // Inicialmente mostrar contenido vacío o bienvenida
         showContent(null);
     }
 
-    private void addNavigationPanel(List<Item> items, int level, String title, Item parentItem) {
+    private void saveData() {
+        if (root != null) {
+            RepositoryFactory.getProvider().saveTopics(root);
+        }
+    }
+
+    private void addNavigationPanel(List<TopicItem> items, int level, String title, TopicItem parentItem) {
         // Crear panel de navegación
         VBox panel = new VBox(0);
         panel.getStyleClass().add("hierarchical-panel");
@@ -78,7 +94,7 @@ public class HierarchicalViewController {
         // Lista
         VBox listContainer = new VBox(8);
         listContainer.setStyle("-fx-padding: 15;");
-        for (Item item : items) {
+        for (TopicItem item : items) {
             Node node = createItemNode(item, items, listContainer, level, panel);
             listContainer.getChildren().add(node);
         }
@@ -125,7 +141,7 @@ public class HierarchicalViewController {
     }
 
     // --- CONTENT AREA LOGIC ---
-    private void showContent(Item selectedItem) {
+    private void showContent(TopicItem selectedItem) {
         contentArea.getChildren().clear();
 
         // Asegurarse de que el contentArea ocupe espacio
@@ -142,7 +158,7 @@ public class HierarchicalViewController {
         contentArea.setStyle("-fx-background-color: -color-bg-default; -fx-padding: 30;");
 
         // Header Content
-        Label lblTitle = new Label(selectedItem.title);
+        Label lblTitle = new Label(selectedItem.getTitle());
         lblTitle.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: -color-text-primary;");
         contentArea.getChildren().add(lblTitle);
 
@@ -191,7 +207,8 @@ public class HierarchicalViewController {
             String text = noteInput.getText();
             if (text != null && !text.trim().isEmpty()) {
                 // Add new note at default position
-                selectedItem.notes.add(new NoteData(text, 50, 50, 200, 150));
+                selectedItem.addNote(new NoteData(text, 50, 50, 200, 150));
+                saveData(); // Save changes
                 renderNotes(selectedItem, notesContainer);
                 noteInput.clear();
             }
@@ -203,7 +220,7 @@ public class HierarchicalViewController {
                 "-fx-background-color: #ffcdd2; -fx-text-fill: #c62828; -fx-border-color: #ef9a9a; -fx-border-radius: 4; -fx-background-radius: 4;");
         btnClearNotes.setPrefHeight(50);
         btnClearNotes.setOnAction(e -> {
-            if (!selectedItem.notes.isEmpty()) {
+            if (!selectedItem.getNotes().isEmpty()) {
                 javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
                         javafx.scene.control.Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmar eliminación");
@@ -212,7 +229,8 @@ public class HierarchicalViewController {
 
                 alert.showAndWait().ifPresent(response -> {
                     if (response == javafx.scene.control.ButtonType.OK) {
-                        selectedItem.notes.clear();
+                        selectedItem.getNotes().clear();
+                        saveData(); // Save changes
                         renderNotes(selectedItem, notesContainer);
                     }
                 });
@@ -223,9 +241,9 @@ public class HierarchicalViewController {
         contentArea.getChildren().add(inputBox);
     }
 
-    private void renderNotes(Item item, Pane container) {
+    private void renderNotes(TopicItem item, Pane container) {
         container.getChildren().clear();
-        if (item.notes.isEmpty()) {
+        if (item.getNotes().isEmpty()) {
             Label empty = new Label("No hay notas registradas. Agrega una abajo.");
             empty.setStyle("-fx-text-fill: -color-text-muted; -fx-font-style: italic;");
             empty.setLayoutX(20);
@@ -234,21 +252,21 @@ public class HierarchicalViewController {
             return;
         }
 
-        for (NoteData note : item.notes) {
+        for (NoteData note : item.getNotes()) {
             Node noteNode = createDraggableNote(note, item, container);
             container.getChildren().add(noteNode);
         }
     }
 
-    private Node createDraggableNote(NoteData data, Item parentItem, Pane container) {
+    private Node createDraggableNote(NoteData data, TopicItem parentItem, Pane container) {
         // Main Note Container
         VBox noteBox = new VBox();
-        noteBox.setPrefSize(data.width, data.height);
+        noteBox.setPrefSize(data.getWidth(), data.getHeight());
         // Removed fixed min size to allow free resizing,
         // relying on resize logic and component min sizes to prevent disappearance
         noteBox.setMinSize(40, 40);
-        noteBox.setLayoutX(data.x);
-        noteBox.setLayoutY(data.y);
+        noteBox.setLayoutX(data.getX());
+        noteBox.setLayoutY(data.getY());
         noteBox.setStyle(
                 "-fx-background-color: #fff9c4; " +
                         "-fx-border-color: #fbc02d; " +
@@ -273,7 +291,8 @@ public class HierarchicalViewController {
         closeBtn.setOnMousePressed(e -> e.consume());
 
         closeBtn.setOnMouseClicked(e -> {
-            parentItem.notes.remove(data);
+            parentItem.getNotes().remove(data);
+            saveData(); // Save changes
             container.getChildren().remove(noteBox);
             e.consume();
         });
@@ -292,14 +311,17 @@ public class HierarchicalViewController {
         dragHandle.getChildren().addAll(spacer, closeBtn);
 
         // Content (TextArea for editing or Label)
-        TextArea contentObj = new TextArea(data.content);
+        TextArea contentObj = new TextArea(data.getContent());
         contentObj.setWrapText(true);
         contentObj.setStyle(
                 "-fx-control-inner-background: #fff9c4; -fx-background-color: transparent; -fx-text-fill: #3e2723; -fx-border-width: 0; -fx-font-family: 'Segoe UI'; -fx-font-size: 14px;");
         VBox.setVgrow(contentObj, Priority.ALWAYS);
 
         // Update content on change
-        contentObj.textProperty().addListener((obs, old, newVal) -> data.content = newVal);
+        contentObj.textProperty().addListener((obs, old, newVal) -> {
+            data.setContent(newVal);
+            saveData(); // Save changes
+        });
 
         // Resize Handle
         Label resizeHandle = new Label("◢");
@@ -325,10 +347,13 @@ public class HierarchicalViewController {
             // Boundaries check could go here
             noteBox.setLayoutX(newX);
             noteBox.setLayoutY(newY);
-            data.x = newX;
-            data.y = newY;
+            data.setX(newX);
+            data.setY(newY);
+            saveData(); // Save changes frequently ?? Maybe on release better
             e.consume();
         });
+        // Use MouseReleased for better performance on save
+        dragHandle.setOnMouseReleased(e -> saveData());
 
         // --- RESIZE LOGIC ---
         resizeHandle.setOnMousePressed(e -> {
@@ -350,14 +375,15 @@ public class HierarchicalViewController {
             // Allow resizing down to a very small size (30px)
             if (newWidth > 30) {
                 noteBox.setPrefWidth(newWidth);
-                data.width = newWidth;
+                data.setWidth(newWidth);
             }
             if (newHeight > 30) {
                 noteBox.setPrefHeight(newHeight);
-                data.height = newHeight;
+                data.setHeight(newHeight);
             }
             e.consume();
         });
+        resizeHandle.setOnMouseReleased(e -> saveData());
 
         return noteBox;
     }
@@ -366,11 +392,11 @@ public class HierarchicalViewController {
         double x, y;
     }
 
-    private Node createItemNode(Item item, List<Item> itemsList, VBox listContainer, int level, VBox panel) {
+    private Node createItemNode(TopicItem item, List<TopicItem> itemsList, VBox listContainer, int level, VBox panel) {
         HBox row = new HBox(8);
         row.setAlignment(Pos.CENTER_LEFT);
 
-        Button btn = new Button(item.title);
+        Button btn = new Button(item.getTitle());
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setMinHeight(45);
         btn.setStyle(
@@ -414,13 +440,14 @@ public class HierarchicalViewController {
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
                     javafx.scene.control.Alert.AlertType.CONFIRMATION);
             alert.setTitle("Eliminar Tema");
-            alert.setHeaderText("¿Eliminar '" + item.title + "'?");
+            alert.setHeaderText("¿Eliminar '" + item.getTitle() + "'?");
             alert.setContentText(
                     "Se eliminarán también todos los subtemas y notas contenidos. Esta acción no se puede deshacer.");
 
             alert.showAndWait().ifPresent(response -> {
                 if (response == javafx.scene.control.ButtonType.OK) {
                     itemsList.remove(item);
+                    saveData(); // Save changes
                     listContainer.getChildren().remove(row);
                 }
             });
@@ -430,7 +457,7 @@ public class HierarchicalViewController {
         return row;
     }
 
-    private void handleAddItem(List<Item> items, VBox listContainer, int level, VBox panel) {
+    private void handleAddItem(List<TopicItem> items, VBox listContainer, int level, VBox panel) {
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("Nuevo");
         dialog.setHeaderText(null);
@@ -443,8 +470,9 @@ public class HierarchicalViewController {
         result.ifPresent(name -> {
             if (name.trim().isEmpty())
                 return;
-            Item newItem = new Item(name);
+            TopicItem newItem = new TopicItem(name);
             items.add(newItem);
+            saveData(); // Save changes
             Node node = createItemNode(newItem, items, listContainer, level, panel);
             int index = listContainer.getChildren().size() - 1;
             if (index < 0)
@@ -453,18 +481,18 @@ public class HierarchicalViewController {
         });
     }
 
-    private void handleItemSelect(Item item, int level, VBox currentPanel) {
+    private void handleItemSelect(TopicItem item, int level, VBox currentPanel) {
         int currentIndex = navigationContainer.getChildren().indexOf(currentPanel);
         if (currentIndex < navigationContainer.getChildren().size() - 1) {
             navigationContainer.getChildren().subList(currentIndex + 1, navigationContainer.getChildren().size())
                     .clear();
         }
 
-        collapsePanel(currentPanel, item.title, level);
+        collapsePanel(currentPanel, item.getTitle(), level);
 
-        if (item.children == null)
-            item.children = new ArrayList<>();
-        addNavigationPanel(item.children, level + 1, item.title, item);
+        if (item.getChildren() == null)
+            item.setChildren(new ArrayList<>());
+        addNavigationPanel(item.getChildren(), level + 1, item.getTitle(), item);
         showContent(item);
     }
 
@@ -519,62 +547,16 @@ public class HierarchicalViewController {
     }
 
     private static class PanelData {
-        List<Item> items;
+        List<TopicItem> items;
         int level;
         String title;
-        Item parentItem;
+        TopicItem parentItem;
 
-        PanelData(List<Item> items, int level, String title, Item parentItem) {
+        PanelData(List<TopicItem> items, int level, String title, TopicItem parentItem) {
             this.items = items;
             this.level = level;
             this.title = title;
             this.parentItem = parentItem;
         }
-    }
-
-    private static class Item {
-        String title;
-        List<Item> children;
-        List<NoteData> notes;
-
-        Item(String title) {
-            this.title = title;
-            this.children = new ArrayList<>();
-            this.notes = new ArrayList<>();
-        }
-
-        void addChild(Item item) {
-            children.add(item);
-        }
-
-        Item withNote(String content) {
-            // Default Post-It Style
-            this.notes.add(new NoteData(content, 50 + (notes.size() * 30), 50 + (notes.size() * 30), 220, 180));
-            return this;
-        }
-    }
-
-    private static class NoteData {
-        String content;
-        double x, y, width, height;
-
-        NoteData(String content, double x, double y, double width, double height) {
-            this.content = content;
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-        }
-    }
-
-    private Item createMockData() {
-        Item root = new Item("ROOT");
-        Item t1 = new Item("Planificación").withNote("MVP objetivos");
-        root.addChild(t1);
-        Item t2 = new Item("Desarrollo");
-        root.addChild(t2);
-        t2.addChild(new Item("Backend").withNote("API REST"));
-        t2.addChild(new Item("Frontend"));
-        return root;
     }
 }

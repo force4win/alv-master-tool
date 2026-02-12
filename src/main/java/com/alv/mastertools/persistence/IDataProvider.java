@@ -12,4 +12,9 @@ public interface IDataProvider {
     void saveLog(TaskLog log);
 
     List<TaskLog> loadLogs();
+
+    // Hierarchical Data persistence
+    void saveTopics(com.alv.mastertools.models.TopicItem root);
+
+    com.alv.mastertools.models.TopicItem loadTopics();
 }

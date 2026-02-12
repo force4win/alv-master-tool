@@ -109,3 +109,10 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
   - **Borrado Masivo**: Se agregó un botón "Borrar Todas" en el área de input, incluyendo un diálogo de confirmación para evitar borrados accidentales.
   - **Borrado de Temas**: Se implementó la capacidad de eliminar temas y subtemas desde la navegación. Cada elemento de la lista ahora tiene un botón "X" que permite remover la sección completa (incluyendo hijos y notas) tras confirmación.
 
+### Sesión: Persistencia de Datos
+- **Almacenamiento Local**:
+  - Se implementó la persistencia completa de temas, subtemas y notas utilizando Java Serialization.
+  - Los datos se guardan automáticamente en `topics.dat` dentro del directorio `.alv-master` del usuario.
+  - Se eliminaron los datos de prueba (`mockData`) y ahora la aplicación inicia cargando el estado guardado o creando una estructura vacía si es la primera vez.
+  - El guardado se activa automáticamente tras cualquier modificación (agregar/borrar temas, agregar/editar/borrar/mover notas).
+
