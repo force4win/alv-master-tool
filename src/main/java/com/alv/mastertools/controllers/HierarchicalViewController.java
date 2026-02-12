@@ -195,7 +195,29 @@ public class HierarchicalViewController {
             }
         });
 
-        inputBox.getChildren().addAll(noteInput, btnAddNote);
+        Button btnClearNotes = new Button("Borrar Todas");
+        btnClearNotes.getStyleClass().add("button-danger"); // Assuming a danger class exists or default style
+        btnClearNotes.setStyle(
+                "-fx-background-color: #ffcdd2; -fx-text-fill: #c62828; -fx-border-color: #ef9a9a; -fx-border-radius: 4; -fx-background-radius: 4;");
+        btnClearNotes.setPrefHeight(50);
+        btnClearNotes.setOnAction(e -> {
+            if (!selectedItem.notes.isEmpty()) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                        javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmar eliminación");
+                alert.setHeaderText("¿Borrar todas las notas?");
+                alert.setContentText("Esta acción no se puede deshacer.");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == javafx.scene.control.ButtonType.OK) {
+                        selectedItem.notes.clear();
+                        renderNotes(selectedItem, notesContainer);
+                    }
+                });
+            }
+        });
+
+        inputBox.getChildren().addAll(noteInput, btnAddNote, btnClearNotes);
         contentArea.getChildren().add(inputBox);
     }
 
@@ -211,12 +233,12 @@ public class HierarchicalViewController {
         }
 
         for (NoteData note : item.notes) {
-            Node noteNode = createDraggableNote(note);
+            Node noteNode = createDraggableNote(note, item, container);
             container.getChildren().add(noteNode);
         }
     }
 
-    private Node createDraggableNote(NoteData data) {
+    private Node createDraggableNote(NoteData data, Item parentItem, Pane container) {
         // Main Note Container
         VBox noteBox = new VBox();
         noteBox.setPrefSize(data.width, data.height);
@@ -236,7 +258,36 @@ public class HierarchicalViewController {
         dragHandle.setPrefHeight(20);
         dragHandle.setMinHeight(20); // Always keep this height
         dragHandle.setMaxHeight(20);
+        dragHandle.setAlignment(Pos.CENTER_RIGHT);
         dragHandle.setStyle("-fx-background-color: rgba(251, 192, 45, 0.3); -fx-cursor: move;");
+
+        // Close Button
+        // Close Button (Red X)
+        Label closeBtn = new Label("✕");
+        closeBtn.setStyle(
+                "-fx-text-fill: #b71c1c; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand; -fx-padding: 0 8 0 8;");
+
+        // Prevent Drag when clicking close button
+        closeBtn.setOnMousePressed(e -> e.consume());
+
+        closeBtn.setOnMouseClicked(e -> {
+            parentItem.notes.remove(data);
+            container.getChildren().remove(noteBox);
+            e.consume();
+        });
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        // Important: spacer allows dragging from the empty area, button allows closing
+        // Since the HBox has the drag listener, we need to ensure the spacer passes it
+        // through or the HBox handles it.
+        // Actually, the HBox itself has the listener. Elements inside like Label might
+        // block it if they consume events.
+        // Label defaults to not consuming unless we set a handler.
+        // Spacer is transparent to hits mostly unless configured otherwise, but HBox
+        // catches the background.
+
+        dragHandle.getChildren().addAll(spacer, closeBtn);
 
         // Content (TextArea for editing or Label)
         TextArea contentObj = new TextArea(data.content);

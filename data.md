@@ -92,3 +92,19 @@ Este archivo sirve como memoria persistente para el asistente AI (Antigravity). 
     - **Draggable**: Las notas pueden moverse libremente por el área de contenido mediante arrastrar y soltar desde la barra superior.
     - **Resizable**: Se agregó un control en la esquina inferior derecha para cambiar el tamaño de la nota.
   - **UI**: Cambio de contenedor de `VBox` a `Pane` para permitir posicionamiento absoluto. Estilo visual mejorado con bordes y sombras tipo Post-It.
+
+### Sesión: Refinamiento de Notas y UX
+- **Correcciones y Ajustes en Notas**:
+  - **Interacción**: Se solucionó un conflicto de eventos (`e.consume()`) que causaba movimiento errático al arrastrar notas dentro del `ScrollPane`.
+  - **Accesibilidad**: Se eliminaron restricciones de tamaño mínimo (ahora permite hasta 30x30px), asegurando siempre una barra de título de 20px clickeable para mover la nota.
+  - **Área de Trabajo**: Se delimitó visualmente el área de notas (2000x2000) con bordes discontinuos y se forzó la aparición de scrollbars para evitar notas ocultas.
+- **Sincronización de Navegación**:
+  - Se corrigió el bug donde al regresar a un nivel superior en el acordeón, el contenido no se actualizaba. Ahora `restorePanel` sincroniza correctamente el área de contenido.
+- **Configuración**:
+  - Se cambió `App.IS_DEV_MODE` a `false` para simular entorno de producción.
+
+### Sesión: Implementación de Borrado de Notas
+- **Funcionalidad de Borrado**:
+  - **Borrado Individual**: Se mejoró la visibilidad y funcionalidad del botón "X" en las notas. Se solucionó el conflicto con el evento de arrastre (drag) consumiendo el evento `MousePressed`.
+  - **Borrado Masivo**: Se agregó un botón "Borrar Todas" en el área de input, incluyendo un diálogo de confirmación para evitar borrados accidentales.
+
